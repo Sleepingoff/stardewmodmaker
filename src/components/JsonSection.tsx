@@ -9,7 +9,7 @@ const JsonPreviewSection = () => {
     <section className=" p-6 bg-gray-50 w-6/12 shrink-0	h-full">
       <h2 className="text-lg font-semibold mb-4">JSON Preview</h2>
       <SyntaxHighlighter language="json" style={vscDarkPlus}>
-        {`{${value}}`}
+        {value}
       </SyntaxHighlighter>
     </section>
   );

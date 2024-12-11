@@ -1,10 +1,11 @@
-import { createContext, Dispatch, SetStateAction } from "react";
+import { createContext } from "react";
+import { ContextValue, InputContextValue } from "../type/context";
 
-export const InputContext = createContext<string | null>(null);
-type ContextValue = {
-  value: string;
-  setter: Dispatch<SetStateAction<string>> | null;
-};
+export const InputContext = createContext<InputContextValue>({
+  value: {},
+  setter: null,
+});
+
 export const MainContext = createContext<ContextValue>({
   value: "",
   setter: null,

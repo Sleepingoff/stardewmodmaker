@@ -2,24 +2,34 @@ import {
   ChangeEventHandler,
   MouseEventHandler,
   useContext,
+  useEffect,
   useState,
 } from "react";
 import ManifestTab from "./Tabs/ManifestTab";
 import { InputContext, MainContext } from "../hooks/context";
-
-// type InputContext = {
-//     [key: number] : string;
-// };
+import { InputValue } from "../type/context";
 
 const InputSection = () => {
-  const { value, setter: setValue } = useContext(MainContext);
+  const { setter: setValue } = useContext(MainContext);
+  const [inputs, setInputs] = useState<InputValue>({
+    manifest: {},
+    content: {},
+  });
   const [tabs, setTabs] = useState<string[]>(["manifest", "content"]);
   const [currentTab, setCurrentTab] = useState<string>("manifest");
+
+  useEffect(() => {
+    if (!setValue) return;
+    setValue(JSON.stringify(inputs[currentTab], null, "\t"));
+  }, [inputs[currentTab]]);
 
   const handleClickNewTab: MouseEventHandler = () => {
     setTabs((prev) => [...prev, "newTab" + (tabs.length - 2)]);
   };
-
+  const handleClickTab: MouseEventHandler = (e) => {
+    const target = e.target as HTMLButtonElement;
+    setCurrentTab(target.id);
+  };
   const handleChangeTabName: ChangeEventHandler<HTMLInputElement> = (e) => {
     const target = e.target as HTMLInputElement;
     if (!target) return;
@@ -31,19 +41,20 @@ const InputSection = () => {
     });
   };
   return (
-    <InputContext.Provider value={value}>
+    <InputContext.Provider value={{ value: inputs, setter: setInputs }}>
       <section className="w-6/12">
         <header className="relative">
           <hgroup className="flex w-full overflow-auto bg-emerald-50">
             {tabs.map((tab, idx) => (
-              <input
-                key={idx}
-                type="text"
-                value={tab}
-                onChange={handleChangeTabName}
-                id={tab}
-                className="block w-fit shrink py-2.5 bg-emerald-100 rounded-t-lg mx-0.5"
-              />
+              <button key={idx} onClick={handleClickTab} id={tab}>
+                <input
+                  type="text"
+                  value={tab}
+                  onChange={handleChangeTabName}
+                  id={tab}
+                  className="block w-fit shrink py-2.5 bg-emerald-100 rounded-t-lg mx-0.5"
+                />
+              </button>
             ))}
           </hgroup>
           <button
