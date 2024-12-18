@@ -1,0 +1,89 @@
+{
+    "ko-KR": {
+        "InitialRequired": [
+            "Name",
+            "Author",
+            "Version",
+            "Description",
+            "UniqueID",
+            "UpdateKeys",
+            "ContentPackFor"
+        ],
+        "Name": {
+            "type": "text",
+            "defaultValue": "Your Mod Name",
+            "placeholder": "모드 이름을 입력해주세요"
+        },
+        "Author": {
+            "type": "text",
+            "defaultValue": "Your Name",
+            "placeholder": "당신의 이름을 입력해주세요"
+        },
+        "Version": {
+            "type": "text",
+            "defaultValue": "Your Mod Version",
+            "placeholder": "0.0.0"
+        },
+        "Description": {
+            "type": "text",
+            "defaultValue": "Your Mod Description",
+            "placeholder": "모드의 설명을 입력해주세요"
+        },
+        "UniqueID": {
+            "type": "text",
+            "defaultValue": "UniqueID",
+            "placeholder": "모드의 특별한 ID를 만들어주세요. 기본적으로 당신의 이름이 필요합니다."
+        },
+        "UpdateKeys": {
+            "type": "array",
+            "defaultValue": [
+                {
+                    "type": "text",
+                    "defaultValue": "Nexus:000",
+                    "placeholder": "모드의 업데이트를 추적할 수 있는 키를 입력해주세요. ex) Nexus:000"
+                }
+            ],
+            "tooltipForAdditionalExplanation": "넥서스의 경우 모드 url의 가장 마지막 숫자가 업데이트 키가 됩니다. 즉, .../123456 일경우, Nexus:123456으로 등록이 가능합니다."
+        },
+        "ContentPackFor": {
+            "type": "object",
+            "defaultValue": {
+                "key": {
+                    "type": "text",
+                    "defaultValue": "UniqueID"
+                },
+                "value": {
+                    "type": "text",
+                    "defaultValue": "Pathoschild.ContentPatcher"
+                },
+                "convertValueType": false
+            }
+        },
+        "Dependencies": {
+            "type": "array",
+            "defaultValue": {
+                "type": "object",
+                "defaultValue": {
+                    "key": {
+                        "type": "text",
+                        "defaultValue": "UniqueID",
+                        "availableValue": [
+                            "UniqueID",
+                            "IsRequired"
+                        ]
+                    },
+                    "value": {
+                        "UniqueID": {
+                            "type": "text",
+                            "defaultValue": ""
+                        },
+                        "IsRequired": {
+                            "type": "boolean",
+                            "defaultValue": true
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

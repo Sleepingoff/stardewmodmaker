@@ -8,6 +8,7 @@ import {
 import ManifestTab from "./Tabs/ManifestTab";
 import { InputContext, MainContext } from "../hooks/context";
 import { InputValue } from "../type/context";
+import ContentTab from "./Tabs/ContentTab";
 
 const InputSection = () => {
   const { setter: setValue } = useContext(MainContext);
@@ -66,6 +67,7 @@ const InputSection = () => {
         </header>
         <main className="bg-emerald-100 h-full">
           {currentTab == "manifest" && <ManifestTab />}
+          {currentTab == "content" && <ContentTab />}
         </main>
       </section>
     </InputContext.Provider>

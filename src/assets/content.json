@@ -1,0 +1,299 @@
+{
+    "ko-KR": {
+        "InitialRequired": [
+            "Format",
+            "Changes"
+        ],
+        "Format": {
+            "type": "text",
+            "defaultValue": "2.4.0"
+        },
+        "Changes": {
+            "type": "array",
+            "defaultValue": [
+                {
+                    "type": "object",
+                    "defaultValue": {
+                        "InitialRequired": [
+                            "Action"
+                        ],
+                        "availableMultipleKey": true,
+                        "key": {
+                            "type": "text",
+                            "defaultValue": "Action",
+                            "availableValue": [
+                                "Action",
+                                "Target",
+                                "FromFile",
+                                "FromArea",
+                                "ToArea",
+                                "When",
+                                "Priority",
+                                "Entries",
+                                "Fields"
+                            ]
+                        },
+                        "value": {
+                            "Action": {
+                                "type": "text",
+                                "inputType": "select",
+                                "defaultValue": "Load",
+                                "availableValues": [
+                                    "Load",
+                                    "EditImage",
+                                    "EditData",
+                                    "EditMap",
+                                    "Include"
+                                ]
+                            },
+                            "Target": {
+                                "type": "text",
+                                "defaultValue": "Characters",
+                                "inputType": "select",
+                                "availableValues": [
+                                    {
+                                        "Characters": {
+                                            "type": "text",
+                                            "defaultValue": ""
+                                        }
+                                    },
+                                    {
+                                        "Data": {
+                                            "type": "text",
+                                            "defaultValue": ""
+                                        }
+                                    },
+                                    {
+                                        "TileSheets": {
+                                            "type": "text",
+                                            "defaultValue": ""
+                                        }
+                                    },
+                                    {
+                                        "Animals": {
+                                            "type": "text",
+                                            "defaultValue": ""
+                                        }
+                                    },
+                                    {
+                                        "Buildings": {
+                                            "type": "text",
+                                            "defaultValue": ""
+                                        }
+                                    },
+                                    {
+                                        "Effects": {
+                                            "type": "text",
+                                            "defaultValue": ""
+                                        }
+                                    },
+                                    {
+                                        "Fonts": {
+                                            "type": "text",
+                                            "defaultValue": ""
+                                        }
+                                    },
+                                    {
+                                        "LooseSprites": {
+                                            "type": "text",
+                                            "defaultValue": ""
+                                        }
+                                    },
+                                    {
+                                        "Maps": {
+                                            "type": "text",
+                                            "defaultValue": ""
+                                        }
+                                    },
+                                    {
+                                        "Minigames": {
+                                            "type": "text",
+                                            "defaultValue": ""
+                                        }
+                                    },
+                                    {
+                                        "Portraits": {
+                                            "type": "text",
+                                            "defaultValue": ""
+                                        }
+                                    },
+                                    {
+                                        "Strings": {
+                                            "type": "text",
+                                            "defaultValue": ""
+                                        }
+                                    },
+                                    {
+                                        "TerrainFeatures": {
+                                            "type": "text",
+                                            "defaultValue": ""
+                                        }
+                                    },
+                                    {
+                                        "volcanoLayouts": {
+                                            "type": "text",
+                                            "defaultValue": ""
+                                        }
+                                    },
+                                    {
+                                        "Mods": {
+                                            "type": "text",
+                                            "defaultValue": ""
+                                        }
+                                    }
+                                ],
+                                "separator": "/"
+                            },
+                            "FromFile": {
+                                "type": "text",
+                                "tooltipForAdditionalExplanation": "자신의 모드 하위 파일 경로를 입력해주세요. 상위 폴더로 가는 행위는 게임에서 허락하지 않습니다."
+                            },
+                            "FromArea": {
+                                "type": "object",
+                                "defaultValue": {
+                                    "key": {
+                                        "type": "text",
+                                        "availableValue": [
+                                            "X",
+                                            "Y",
+                                            "Width",
+                                            "Height"
+                                        ],
+                                        "defaultValue": "X",
+                                        "requireAllKeys": true
+                                    },
+                                    "value": {
+                                        "type": "number",
+                                        "defaultValue": 0
+                                    }
+                                },
+                                "tooltipForAdditionalExplanation": "모드의 이미지 중 반영하고 싶은 부분. pixel 단위. ToArea와 width, height가 같아야 합니다."
+                            },
+                            "ToArea": {
+                                "type": "object",
+                                "defaultValue": {
+                                    "key": {
+                                        "type": "text",
+                                        "availableValue": [
+                                            "X",
+                                            "Y",
+                                            "Width",
+                                            "Height"
+                                        ],
+                                        "defaultValue": "X",
+                                        "requireAllKeys": true
+                                    },
+                                    "value": {
+                                        "type": "number",
+                                        "defaultValue": 0
+                                    }
+                                },
+                                "tooltipForAdditionalExplanation": "게임의 이미지 중 변경하고 싶은 부분. pixel 단위. FromArea와 width, height가 같아야 합니다."
+                            },
+                            "When": {
+                                "type": "object",
+                                "defaultValue": {
+                                    "key": {
+                                        "type": "text",
+                                        "defaultValue": "CustomConfigKey",
+                                        "tooltipForAdditionalExplanation": "너무 많아서 천천히 추가... 정보: https://github.com/Pathoschild/StardewMods/blob/develop/ContentPatcher/docs/author-guide/tokens.md#global-tokens"
+                                    },
+                                    "value": {
+                                        "type": "text",
+                                        "defaultValue": ""
+                                    }
+                                },
+                                "availableMultipleKey": true
+                            },
+                            "Priority": {
+                                "type": "text",
+                                "inputType": "select",
+                                "availableValues": [
+                                    {
+                                        "Early": {
+                                            "type": "text",
+                                            "defaultValue": "",
+                                            "placeholder": "증가일 경우 + 10, 감소일 경우 -10 등으로 표현"
+                                        }
+                                    },
+                                    {
+                                        "Default": {
+                                            "type": "text",
+                                            "defaultValue": "",
+                                            "placeholder": "증가일 경우 + 10, 감소일 경우 -10 등으로 표현"
+                                        }
+                                    },
+                                    {
+                                        "Late": {
+                                            "type": "text",
+                                            "defaultValue": "",
+                                            "placeholder": "증가일 경우 + 10, 감소일 경우 -10 등으로 표현"
+                                        }
+                                    }
+                                ]
+                            },
+                            "Entries": {
+                                "type": "object",
+                                "defaultValue": {
+                                    "key": {
+                                        "type": "text"
+                                    },
+                                    "value": {
+                                        "type": "object",
+                                        "defaultValue": {
+                                            "key": {
+                                                "type": "text"
+                                            },
+                                            "value": {
+                                                "type": [
+                                                    "text",
+                                                    "number",
+                                                    "array"
+                                                ],
+                                                "defaultValue": "",
+                                                "convertValueType": true,
+                                                "type==array": {
+                                                    "type": "text"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "availableMultipleKey": true
+                            },
+                            "Fields": {
+                                "type": "object",
+                                "defaultValue": {
+                                    "key": {
+                                        "type": "text"
+                                    },
+                                    "value": {
+                                        "type": "object",
+                                        "defaultValue": {
+                                            "key": {
+                                                "type": "text"
+                                            },
+                                            "value": {
+                                                "type": [
+                                                    "text",
+                                                    "number",
+                                                    "array"
+                                                ],
+                                                "defaultValue": "",
+                                                "convertValueType": true,
+                                                "type==array": {
+                                                    "type": "text"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "availableMultipleKey": true
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
