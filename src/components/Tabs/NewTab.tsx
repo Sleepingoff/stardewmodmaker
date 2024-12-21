@@ -1,28 +1,15 @@
-import {
-  ChangeEventHandler,
-  MouseEventHandler,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { useContext, useEffect, useState } from "react";
+import { Inputs } from "../../type/types";
 import { FormatContext, InputContext } from "../../hooks/context";
-import { Input, Inputs } from "../../type/types";
 import FormatValue from "../FormatValue";
 import convertInputsToJson from "../../utils/convertInputsToJson";
 
-const ContentTab = () => {
+interface NewTabType {
+  id: string;
+}
+const NewTab = ({ id }: NewTabType) => {
   const { setter } = useContext(InputContext);
-
-  //훅
   const [inputs, setInputs] = useState<Inputs>([
-    {
-      key: "Format",
-      id: 0,
-      parentId: [],
-      value: [],
-      type: "text",
-      defaultValue: "2.4.0",
-    },
     {
       key: "Changes",
       parentId: [],
@@ -48,21 +35,26 @@ const ContentTab = () => {
       type: "array",
     },
   ]);
+
   useEffect(() => {
     if (!setter) return;
     const jsonOutput = convertInputsToJson(inputs);
-
     setter((prev) => ({
       ...prev,
-      1: jsonOutput,
+      [id]: jsonOutput,
     }));
   }, [inputs, setter]);
+
   return (
-    <section>
+    <section key={id + "newTab"}>
       <FormatContext.Provider value={{ value: inputs, setter: setInputs }}>
         <div className="w-full p-5 pl-0">
           {inputs.map((input) => (
-            <FormatValue key={input.id} inputs={input} separator="," />
+            <FormatValue
+              key={input.id + "format"}
+              inputs={input}
+              separator=","
+            />
           ))}
         </div>
       </FormatContext.Provider>
@@ -70,4 +62,4 @@ const ContentTab = () => {
   );
 };
 
-export default ContentTab;
+export default NewTab;

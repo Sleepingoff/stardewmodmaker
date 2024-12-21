@@ -40,8 +40,8 @@ h1 {
 }
 
 button {
-  border-radius: 0.5rem;
-  border: 1px solid transparent;
+  /* border-radius: 0.5rem; */
+  border: 1px solid #1a1a1a;
   padding: 0 0.5rem;
   font-size: 1em;
   font-weight: 500;
@@ -50,13 +50,78 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+button:disabled {
+  background-color: inherit;
+}
+
+button:hover:not(button:disabled) {
   border-color: #646cff;
 }
 
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+input {
+  background-color: inherit;
+  border-bottom: 1px solid #1a1a1a;
+  border-radius: 0;
+  cursor: cell;
+  color: #1a1a1a;
+}
+
+input::placeholder {
+  color: #303e4e;
+
+}
+
+input:disabled {
+  color: #535bf2;
+}
+
+
+input:focus {
+  background-color: #303e4e;
+  color: #f9f9f9;
+  outline: none;
+  font-weight: bold;
+}
+
+input:focus::placeholder {
+  color: #a3a6a8;
+  font-weight: 400;
+}
+
+textarea {
+  background-color: inherit;
+  border-bottom: 1px solid #1a1a1a;
+  border-radius: 0;
+  cursor: cell;
+  color: #1a1a1a;
+  width: 100%;
+  min-height: 2em;
+  resize: none;
+}
+
+textarea::-webkit-scrollbar {
+  width: 0;
+}
+
+textarea::placeholder {
+  color: #303e4e;
+}
+
+textarea:focus {
+  background-color: #303e4e;
+  color: #f9f9f9;
+  outline: none;
+  /* font-weight: bold; */
+}
+
+textarea:focus::placeholder {
+  color: #a3a6a8;
+  font-weight: 400;
 }
 
 @media (prefers-color-scheme: light) {
@@ -70,6 +135,75 @@ button:focus-visible {
   }
 
   button {
-    background-color: #f9f9f9;
+    background-color: #d9d9d9;
   }
+}
+
+
+summary::before {
+  content: '';
+  width: 18px;
+  height: 18px;
+  border-top: 2px solid #1a1a1a;
+  border-right: 2px solid #1a1a1a;
+  margin: .25em;
+  transition: 0.2s;
+}
+
+details[open]>summary::before {
+  transform: rotate(180deg);
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+summary {
+  cursor: grab;
+}
+
+summary,
+summary>input {
+  background-color: #e0d9d8;
+  color: #303e4e;
+  display: flex;
+  height: fit-content;
+}
+
+summary>input {
+  font-weight: bolder;
+  border: none;
+}
+
+summary>button {
+  margin-left: auto;
+  border-radius: 0;
+  border: 1px solid #1a1a1a;
+  background-color: inherit;
+}
+
+summary>button:hover {
+  background-color: #a3a6a8;
+}
+
+details {
+  background: #babbbb;
+  border-radius: 5px;
+  /* outline: 1px solid #e0d9d8; */
+  border: 1px solid #e0d9d8;
+  box-shadow: 6px 6px 0px 0px rgb(0, 0, 0);
+  margin: 5px;
+}
+
+
+
+details>summary~div {
+  font-weight: bolder;
+  padding: 5px;
+}
+
+details>summary~div>textarea {
+  font-weight: 400;
+  padding: 5px;
+  padding-bottom: 2px;
 }

@@ -8,10 +8,12 @@ import { NewType } from "../type/types";
 
 const DynamicButton = ({
   id,
+  position,
   type,
   setNewInputType,
 }: {
   id: number;
+  position: number;
   type: string[];
   setNewInputType: Dispatch<SetStateAction<NewType>>;
 }) => {
@@ -27,7 +29,7 @@ const DynamicButton = ({
     e.stopPropagation();
     const target = e.target as HTMLButtonElement;
     if (!target?.id) return;
-    setNewInputType((prev) => ({ target: target.id, id }));
+    setNewInputType((prev) => ({ target: target.id, id, position }));
   };
   return (
     <div className="p-4 ml-auto mr-5 w-fit">

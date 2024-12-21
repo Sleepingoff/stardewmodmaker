@@ -15,4 +15,7 @@ export const MainContext = createContext<ContextValue>({
   setter: null,
 });
 
-export const FormatContext = createContext<FormatContextValue>({});
+export const FormatContext = createContext<FormatContextValue>({
+  value: [],
+  setter: null,
+});

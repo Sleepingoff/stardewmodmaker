@@ -9,65 +9,74 @@ import ManifestTab from "./Tabs/ManifestTab";
 import { InputContext, MainContext } from "../hooks/context";
 import { InputValue } from "../type/context";
 import ContentTab from "./Tabs/ContentTab";
+import NewTab from "./Tabs/NewTab";
 
 const InputSection = () => {
   const { setter: setValue } = useContext(MainContext);
   const [inputs, setInputs] = useState<InputValue>({
-    manifest: {},
-    content: {},
+    0: {},
+    1: {},
   });
   const [tabs, setTabs] = useState<string[]>(["manifest", "content"]);
-  const [currentTab, setCurrentTab] = useState<string>("manifest");
+  const [currentTab, setCurrentTab] = useState<number>(0);
 
   useEffect(() => {
     if (!setValue) return;
-    setValue(JSON.stringify(inputs[currentTab], null, "\t"));
-  }, [inputs[currentTab]]);
+    setValue(JSON.stringify(inputs[+currentTab], null, "\t"));
+  }, [inputs, currentTab]);
 
   const handleClickNewTab: MouseEventHandler = () => {
     setTabs((prev) => [...prev, "newTab" + (tabs.length - 2)]);
   };
   const handleClickTab: MouseEventHandler = (e) => {
     const target = e.target as HTMLButtonElement;
-    setCurrentTab(target.id);
+    setCurrentTab(+target.id);
   };
   const handleChangeTabName: ChangeEventHandler<HTMLInputElement> = (e) => {
     const target = e.target as HTMLInputElement;
     if (!target) return;
-    setCurrentTab(target.id);
-    const indexOfTarget = tabs.findIndex((tab) => tab === target.id);
-    setTabs((prev) => {
-      prev[indexOfTarget] = target.value;
-      return prev;
-    });
+    setCurrentTab(+target.id);
+    setTabs((prev) => [
+      ...prev.splice(0, +target.id),
+      target.value,
+      ...prev.splice(1),
+    ]);
   };
   return (
     <InputContext.Provider value={{ value: inputs, setter: setInputs }}>
       <section className="w-6/12">
         <header className="relative">
-          <hgroup className="flex w-full overflow-auto bg-emerald-50">
+          <hgroup className="flex w-full overflow-auto">
             {tabs.map((tab, idx) => (
-              <button key={idx} onClick={handleClickTab} id={tab}>
+              <button key={idx} onClick={handleClickTab} id={idx + ""}>
                 <input
                   type="text"
                   value={tab}
                   onChange={handleChangeTabName}
-                  id={tab}
-                  className="block w-fit shrink py-2.5 bg-emerald-100 rounded-t-lg mx-0.5"
+                  id={idx + ""}
+                  className="block w-fit shrink py-2.5 rounded-t-lg mx-0.5"
                 />
               </button>
             ))}
           </hgroup>
           <button
             onClick={handleClickNewTab}
-            className="absolute ml-auto mr-0 inset-0 w-fit h-fit bg-emerald-50	"
+            className="absolute ml-auto mr-0 inset-0 w-fit h-fit"
           >
             +
           </button>
         </header>
-        <main className="bg-emerald-100 h-full">
-          {currentTab == "manifest" && <ManifestTab />}
-          {currentTab == "content" && <ContentTab />}
+        <main className="h-[80vh]	 overflow-auto">
+          {tabs.map((tabName, idx) => {
+            if (idx == 0 && currentTab == idx)
+              return <ManifestTab key={idx + "tab"} />;
+            else if (idx == 1 && currentTab == idx)
+              return <ContentTab key={idx + "tab"} />;
+            else
+              return (
+                currentTab == idx && <NewTab key={idx + "tab"} id={idx + ""} />
+              );
+          })}
         </main>
       </section>
     </InputContext.Provider>

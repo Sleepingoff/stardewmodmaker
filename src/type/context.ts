@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
+import { Inputs } from "./types";
 export type ContextValue = {
   value: string;
   setter: Dispatch<SetStateAction<string>> | null;
@@ -16,5 +17,6 @@ export type InputValue = {
 };
 
 export type FormatContextValue = {
-  [key: string]: FormatContextValue | any;
+  value: Inputs;
+  setter: Dispatch<SetStateAction<Inputs>> | null;
 };
