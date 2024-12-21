@@ -37,8 +37,7 @@ const ContentTab = () => {
               type: ["text"],
             },
           ],
-          type: [["text"]],
-          defaultValue: "Load",
+          type: ["object"],
         },
       ],
       id: 1,
@@ -60,7 +59,7 @@ const ContentTab = () => {
   return (
     <section>
       <FormatContext.Provider value={{ value: inputs, setter: setInputs }}>
-        <FormatStart separator="," inputs={inputs} setType={setType} />
+        <FormatStart separator="," inputs={inputs} />
       </FormatContext.Provider>
     </section>
   );
