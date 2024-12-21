@@ -1,5 +1,9 @@
 import { createContext } from "react";
-import { ContextValue, InputContextValue } from "../type/context";
+import {
+  ContextValue,
+  FormatContextValue,
+  InputContextValue,
+} from "../type/context";
 
 export const InputContext = createContext<InputContextValue>({
   value: {},
@@ -10,3 +14,5 @@ export const MainContext = createContext<ContextValue>({
   value: "",
   setter: null,
 });
+
+export const FormatContext = createContext<FormatContextValue>({});

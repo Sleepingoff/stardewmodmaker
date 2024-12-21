@@ -14,3 +14,7 @@ export type InputContextValue = {
 export type InputValue = {
   [key: string]: object;
 };
+
+export type FormatContextValue = {
+  [key: string]: FormatContextValue | any;
+};

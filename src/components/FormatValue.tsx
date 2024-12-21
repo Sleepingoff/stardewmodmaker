@@ -3,117 +3,146 @@ import {
   Dispatch,
   MouseEventHandler,
   SetStateAction,
+  useContext,
   useEffect,
   useState,
 } from "react";
 import DynamicButton from "./DynamicButton";
-type Types = Array<string | Types>;
+import { FormatContext } from "../hooks/context";
+import { Input, Inputs, NewType, Types, Value } from "../type/types";
 interface FormatType {
-  types: Types;
   separator: string;
   beforeInputs?: string;
   afterInputs?: string;
-  inputs: Types;
+  inputs: Input;
+  disabled?: boolean;
+  addInputs: Dispatch<SetStateAction<Inputs>>;
+  addTypes: Dispatch<SetStateAction<Types>>;
+}
+interface FormatArrayType {
+  beforeInputs?: string;
+  afterInputs: string;
+  separator: string;
+  parent: Input;
+  inputs: Inputs;
+  addInputs: Dispatch<SetStateAction<Inputs>>;
+  addTypes: Dispatch<SetStateAction<Types>>;
 }
 
+interface FormatStartType {
+  separator: string;
+  beforeInputs?: string;
+  afterInputs?: string;
+  inputs: Inputs;
+  setType: Dispatch<SetStateAction<Types>>;
+}
 const FormatValue = ({
-  types,
   beforeInputs,
   afterInputs,
   separator,
   inputs,
+  addInputs,
+  addTypes,
 }: FormatType) => {
+  const { value, setter } = useContext(FormatContext);
   const handleDeleteKey: MouseEventHandler = (e) => {
     const target = e.target as HTMLButtonElement;
   };
+  const [currentInputs, setCurrentInputs] = useState<Inputs>(inputs!.value);
+  const [currentTypes, setCurrentTypes] = useState<Types>(inputs!.type);
+
+  const [type, setNewInputType] = useState<NewType>({
+    target: "",
+    id: inputs.id,
+  });
+  useEffect(() => {
+    if (!type.target) return;
+    const newType = type.target == "object" ? [["text"]] : [type.target];
+    const newInputs = {
+      id: (inputs.id + new Date().getSeconds()) * 100,
+      key: "test",
+      value: [
+        {
+          id: (inputs.id + new Date().getSeconds()) * 1000,
+          key: "test",
+          value: [],
+          type: ["text"],
+          defaultValue: "",
+        },
+      ],
+      type: newType as Types,
+    };
+
+    setCurrentInputs((prev) => [...prev, newInputs]);
+    setNewInputType((prev) => ({ ...prev, target: "" }));
+  }, [type]);
 
   useEffect(() => {
-    //types와 inputs의 길이 차이에 대한 예외처리
-    if (types.length == inputs.length) return;
-    if (types.length < inputs.length) {
-      console.log(
-        `types의 길이가 ${
-          inputs.length - types.length
-        }만큼 부족합니다. 임의로 마지막 type으로 지정합니다.`
-      );
-      inputs.forEach((input, idx) => {
-        if (types.length - idx <= 0) types[idx] = types[types.length - 1];
-      });
-    } else {
-      console.log(
-        `types의 길이가 ${
-          types.length - inputs.length
-        }만큼 많습니다. 임의로 type에 따라 inputs를 늘립니다.`
-      );
-      types.forEach((_, idx) => {
-        if (idx >= inputs.length) inputs.push("");
-      });
-    }
-  }, [inputs]);
+    setCurrentTypes((prev) => currentInputs.map((inp) => inp.type).flat());
+  }, [currentInputs]);
+
   return (
-    <div key={inputs.join("")}>
+    <div key={inputs.id} id={inputs.id + ""}>
       {beforeInputs}
-      {inputs.map((input, idx) => {
-        if (Array.isArray(types[idx]) && Array.isArray(input)) {
-          {
-            ("{");
+
+      {currentInputs.length > 0 ? (
+        inputs.type.map((t, idx) => {
+          if (Array.isArray(t)) {
+            return t.map((y, inx) => (
+              <FormatArray
+                key={idx + "" + inx}
+                parent={inputs}
+                addInputs={setCurrentInputs}
+                addTypes={setCurrentTypes}
+                separator={","}
+                beforeInputs="{"
+                afterInputs="}"
+                inputs={currentInputs}
+              />
+            ));
+          } else if (t == "array") {
+            return (
+              <FormatArray
+                key={idx + separator}
+                parent={inputs}
+                addInputs={setCurrentInputs}
+                addTypes={setCurrentTypes}
+                separator={","}
+                beforeInputs="["
+                afterInputs="]"
+                inputs={inputs.value}
+              />
+            );
           }
-          return types[idx].map((type, inx) => (
-            <FormatValue
-              key={idx + separator + inx}
-              types={[type]}
-              separator={separator}
-              afterInputs=","
-              inputs={input as Types}
-            />
-          ));
-          {
-            ("}");
-          }
-        } else if (types[idx] == "array") {
-          return (
-            <FormatArray
-              key={input as string}
-              types={[]}
-              separator={","}
-              beforeInputs="["
-              afterInputs="]"
-              inputs={[input]}
-            />
-          );
-        } else {
-          return (
-            <Format
-              key={idx}
-              separator={idx <= inputs.length - 1 ? separator : ""}
-              currentKey={input as string}
-            />
-          );
-        }
-      })}
+        })
+      ) : (
+        <Format inputs={inputs} />
+      )}
+
       {afterInputs}
+      <DynamicButton
+        id={inputs.id}
+        type={["text", "object", "array"]}
+        setNewInputType={setNewInputType}
+      />
     </div>
   );
 };
 
 const FormatArray = ({
-  types,
   beforeInputs,
   afterInputs,
   separator,
-  inputs,
-}: FormatType) => {
-  const [type, setNewInputType] = useState<string>("");
-  const [currentTypes, setTypes] = useState<Types>(types);
-  const [key, setKey] = useState<string>(inputs[0] as string);
+  parent,
+  inputs: values,
+  addInputs,
+  addTypes,
+}: FormatArrayType) => {
+  const [key, setKey] = useState<string>(parent.key);
   const handleDeleteKey: MouseEventHandler = (e) => {
     const target = e.target as HTMLButtonElement;
   };
 
-  useEffect(() => {
-    if (!type) return;
-    setTypes((prev) => [...prev, type == "object" ? [] : type]);
-  }, [type]);
   return (
     <div className="w-full ml-5">
       <button id="" onClick={handleDeleteKey}>
@@ -128,126 +157,113 @@ const FormatArray = ({
           />
         </summary>
         {beforeInputs}
-        {currentTypes.map((type, inx) => {
-          if (Array.isArray(type)) {
-            return (
-              <div key={inx + "" + new Date()}>
-                <FormatValue
-                  types={[type]}
-                  separator={separator}
-                  beforeInputs="{"
-                  afterInputs="},"
-                  inputs={[inx + ""]}
-                />
-              </div>
-            );
-          } else {
-            return (
-              <div key={inx + "" + new Date()}>
-                <FormatValue
-                  types={[type]}
-                  separator={separator}
-                  afterInputs=","
-                  inputs={[inx + ""]}
-                />
-              </div>
-            );
-          }
+        {values.map((value, inx) => {
+          return (
+            <FormatValue
+              addTypes={addTypes}
+              key={inx + "" + new Date()}
+              addInputs={addInputs}
+              separator={separator}
+              afterInputs=","
+              inputs={value}
+            />
+          );
         })}
-        <DynamicButton
-          type={["text", "object", "array"]}
-          setNewInputType={setNewInputType}
-        />
         {afterInputs}
       </details>
     </div>
   );
 };
 
-const FormatKey = ({
-  types,
+const FormatStart = ({
   beforeInputs,
   afterInputs,
   separator,
   inputs,
-}: FormatType) => {
-  const [key, setKey] = useState<string>("");
-  const [type, setNewInputType] = useState<string>("");
-  const [currentTypes, setTypes] = useState<Types>(types);
-  const handleDeleteKey: MouseEventHandler = (e) => {
-    const target = e.target as HTMLButtonElement;
-  };
-  const handleClickAddSeparator: MouseEventHandler = () => {
-    setTypes((prev) => [...prev, ""]);
-  };
-  useEffect(() => {
-    if (!type) return;
-    setTypes((prev) => [...prev, type == "object" ? [] : type]);
-  }, [type]);
+  setType,
+}: FormatStartType) => {
+  const { value, setter } = useContext(FormatContext);
 
   return (
     <div className="w-full ml-5">
-      <button id="" onClick={handleDeleteKey}>
-        delete
-      </button>
-      <details>
-        <summary>
-          <input
-            type="text"
-            value={key}
-            onChange={(e) => setKey(e.target.value)}
-          />
-        </summary>
+      {inputs.map((input) => (
         <FormatValue
-          inputs={inputs}
-          types={currentTypes}
+          addTypes={setType}
+          addInputs={setter}
+          key={input.id}
+          inputs={input}
           separator={separator}
           afterInputs={afterInputs}
           beforeInputs={beforeInputs}
         />
-      </details>
-      <DynamicButton
-        type={["text", "object", "array"]}
-        setNewInputType={setNewInputType}
-      />
+      ))}
     </div>
   );
 };
+
 const Format = ({
-  separator,
-  currentKey,
+  // currentKey,
+  inputs,
   disabled,
 }: {
-  separator?: string;
-  currentKey: string;
+  // currentKey: string;
+  inputs: Input;
   disabled?: boolean;
 }) => {
-  const [key, setKey] = useState<string>(currentKey);
-  const [sep, setInput] = useState<string>("");
-  const [inputs, setInputs] = useState<string[]>([""]);
+  // const { value: key, setter: setKey } = useContext(FormatContext);
+  const [key, setKey] = useState<string>(inputs.key);
+  const [sep, setSep] = useState<string>("");
+  const [id, setId] = useState<string>("");
+  const [value, setValue] = useState<{
+    [x: string]: string;
+  }>({ 0: inputs.defaultValue ?? "" });
+  const [values, setValues] = useState<{
+    [x: string]: string | number;
+  }>({});
   const handleDeleteKey: MouseEventHandler = (e) => {
     const target = e.target as HTMLButtonElement;
   };
   const handleChangeSep: ChangeEventHandler<HTMLInputElement> = (e) => {
     const target = e.target as HTMLInputElement;
-    setInput(target.value);
+    setSep(target.value);
   };
   const handleClickAddSeparator: MouseEventHandler = () => {
-    setInputs((prev) => [...prev, ""]);
+    const lastIndex = Object.values(values).length;
+    setValues((prev) => ({
+      ...prev,
+      [lastIndex]: {
+        id: inputs.id,
+        key: key,
+        value: "",
+      },
+    }));
   };
+  useEffect(() => {
+    if (!key) return;
+    const currentValue = (sep ?? "") + Object.values(value).join(sep ?? "");
+    const newValue = {
+      id: inputs.id,
+      key: key,
+      value: currentValue,
+    };
+    setValues((prev) => ({ ...prev, [+id]: newValue }));
+  }, [value, key, sep]);
+
+  useEffect(() => {
+    // if (!setter) return;
+    // setter(values);
+  }, [values]);
+
   const handleChangeInputs: ChangeEventHandler<HTMLInputElement> = (e) => {
     const target = e.target as HTMLInputElement;
-    setInputs((prev) =>
-      prev.map((p, idx) => {
-        if (idx == +target.id) {
-          return target.value;
-        }
-        return p;
-      })
-    );
+    setId((prev) => target.id);
+    setValue((prev) => ({
+      ...prev,
+      [target.id]: target.value,
+    }));
   };
   return (
-    <div className="w-full ml-5">
+    <div className="w-full ml-5" id={inputs.id + ""}>
       <details>
         <summary>
           <button id="" className="mt-2" onClick={handleDeleteKey}>
@@ -257,17 +273,17 @@ const Format = ({
             type="text"
             value={key}
             onChange={(e) => setKey(e.target.value)}
-            disabled={disabled}
           />
         </summary>{" "}
-        {inputs.map((input, idx) => {
+        {Object.values(values).map((input, idx) => {
           return (
-            <div key={input + idx}>
+            <div key={inputs.id + "" + idx * 1000}>
               {!!sep && sep}
               <input
+                id={idx + ""}
                 className="w-full"
-                type={typeof input == "string" ? "text" : typeof input}
-                value={input}
+                type="text"
+                value={value[idx] ?? ""}
                 onChange={handleChangeInputs}
               />
             </div>
@@ -286,4 +302,4 @@ const Format = ({
     </div>
   );
 };
-export { FormatValue, FormatKey };
+export default FormatStart;
