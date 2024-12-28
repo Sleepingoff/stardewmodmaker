@@ -10,6 +10,7 @@ import { InputContext, MainContext } from "../hooks/context";
 import { InputValue } from "../type/context";
 import ContentTab from "./Tabs/ContentTab";
 import NewTab from "./Tabs/NewTab";
+import { Inputs } from "../type/types";
 
 const InputSection = () => {
   const { setter: setValue } = useContext(MainContext);
@@ -22,7 +23,7 @@ const InputSection = () => {
 
   useEffect(() => {
     if (!setValue) return;
-    setValue(inputs[+currentTab]);
+    setValue(inputs[+currentTab] as Inputs);
   }, [inputs, currentTab]);
 
   const handleClickNewTab: MouseEventHandler = () => {
