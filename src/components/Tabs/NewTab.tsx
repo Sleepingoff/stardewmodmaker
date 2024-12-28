@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { Inputs } from "../../type/types";
 import { FormatContext, InputContext } from "../../hooks/context";
 import FormatValue from "../FormatValue";
-import convertInputsToJson from "../../utils/convertInputsToJson";
 
 interface NewTabType {
   id: string;
@@ -38,10 +37,9 @@ const NewTab = ({ id }: NewTabType) => {
 
   useEffect(() => {
     if (!setter) return;
-    const jsonOutput = convertInputsToJson(inputs);
     setter((prev) => ({
       ...prev,
-      [id]: jsonOutput,
+      [id]: inputs,
     }));
   }, [inputs, setter]);
 

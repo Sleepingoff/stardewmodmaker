@@ -185,9 +185,10 @@ const ManifestTab = () => {
 
     setter((prev) => ({
       ...prev,
-      0: jsonOutput,
+      0: inputs,
     }));
   }, [inputs, setter]);
+
   return (
     <section>
       <FormatContext.Provider value={{ value: inputs, setter: setInputs }}>

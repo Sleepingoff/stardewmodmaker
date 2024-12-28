@@ -50,11 +50,10 @@ const ContentTab = () => {
   ]);
   useEffect(() => {
     if (!setter) return;
-    const jsonOutput = convertInputsToJson(inputs);
 
     setter((prev) => ({
       ...prev,
-      1: jsonOutput,
+      1: inputs,
     }));
   }, [inputs, setter]);
   return (

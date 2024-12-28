@@ -14,15 +14,15 @@ import NewTab from "./Tabs/NewTab";
 const InputSection = () => {
   const { setter: setValue } = useContext(MainContext);
   const [inputs, setInputs] = useState<InputValue>({
-    0: {},
-    1: {},
+    0: [],
+    1: [],
   });
   const [tabs, setTabs] = useState<string[]>(["manifest", "content"]);
   const [currentTab, setCurrentTab] = useState<number>(0);
 
   useEffect(() => {
     if (!setValue) return;
-    setValue(JSON.stringify(inputs[+currentTab], null, "\t"));
+    setValue(inputs[+currentTab]);
   }, [inputs, currentTab]);
 
   const handleClickNewTab: MouseEventHandler = () => {
@@ -48,13 +48,18 @@ const InputSection = () => {
         <header className="relative">
           <hgroup className="flex w-full overflow-auto">
             {tabs.map((tab, idx) => (
-              <button key={idx} onClick={handleClickTab} id={idx + ""}>
+              <button
+                key={idx}
+                onClick={handleClickTab}
+                id={idx + ""}
+                className="p-0"
+              >
                 <input
                   type="text"
                   value={tab}
                   onChange={handleChangeTabName}
                   id={idx + ""}
-                  className="block w-fit shrink py-2.5 rounded-t-lg mx-0.5"
+                  className="block w-full shrink py-2.5"
                 />
               </button>
             ))}

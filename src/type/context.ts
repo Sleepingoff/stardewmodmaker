@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
 import { Inputs } from "./types";
 export type ContextValue = {
-  value: string;
-  setter: Dispatch<SetStateAction<string>> | null;
+  value: [];
+  setter: Dispatch<SetStateAction<object>> | null;
 };
 
 export type InputContextValue = {

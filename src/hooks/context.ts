@@ -11,7 +11,7 @@ export const InputContext = createContext<InputContextValue>({
 });
 
 export const MainContext = createContext<ContextValue>({
-  value: "",
+  value: [],
   setter: null,
 });
 

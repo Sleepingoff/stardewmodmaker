@@ -12,6 +12,8 @@ import DynamicButton from "./DynamicButton";
 import { FormatContext } from "../hooks/context";
 import { Input, Inputs, NewType } from "../type/types";
 import { FormatContextValue } from "../type/context";
+import addValueByParentId from "../utils/addValueByParentId";
+import updateValueById from "../utils/updateValueById";
 interface FormatType {
   separator: string;
   beforeInputs?: string;
@@ -27,51 +29,6 @@ const randomTextValueOnDisabledInput = (): string => {
   return randomTextArray[randomIndex] ?? "❤️";
 };
 
-const updateValueByParentIdOptimized = (
-  inputs: Inputs,
-  parentId: number[],
-  newValue: Input,
-  position?: number
-): Inputs => {
-  const targetDepth = parentId.length - 1;
-
-  const recursiveUpdate = (items: Inputs, currentDepth: number): Inputs => {
-    return items.map((item) => {
-      if (
-        item.parentId.length === targetDepth &&
-        item.parentId.every((id, i) => id === parentId[i])
-      ) {
-        // 현재 depth에서 parentId가 일치하면 value를 업데이트
-        if (!!position) {
-          return {
-            ...item,
-            value: [
-              ...item.value.splice(0, position + 1),
-              newValue,
-              ...item.value,
-            ],
-          };
-        } else
-          return {
-            ...item,
-            value: [...item.value, newValue],
-          };
-      }
-
-      if (Array.isArray(item.value) && currentDepth < targetDepth) {
-        // value가 배열이고 더 깊은 depth를 탐색해야 할 경우 재귀
-        return {
-          ...item,
-          value: recursiveUpdate(item.value, currentDepth + 1),
-        };
-      }
-
-      return item; // 일치하지 않으면 원본 유지
-    });
-  };
-
-  return recursiveUpdate(inputs, 0);
-};
 const FormatValue = ({
   beforeInputs,
   afterInputs,
@@ -137,18 +94,14 @@ const FormatValue = ({
       );
     } else {
       setter((prev) => [
-        ...updateValueByParentIdOptimized(
-          prev,
-          parentId,
-          newInputs,
-          addPosition
-        ),
+        ...addValueByParentId(prev, parentId, newInputs, addPosition),
       ]);
     }
   }, [type]);
 
   useEffect(() => {
     //!inputs 상태 변경 인식을 잘 못하는 문제때문에 작성
+    //복사되는 깊이 문제인듯?
     setCurrentInputs(inputs.value || []);
   }, [inputs]);
 
@@ -164,13 +117,13 @@ const FormatValue = ({
     <div
       key={inputs.id + (inputs.type[0] as string)}
       id={inputs.id + ""}
-      className="pl-5 pr-2.5"
+      className=""
     >
-      {beforeInputs}
       {!inputs?.defaultValue ? (
         <div className="w-full">
           <details open>
-            <summary>
+            {/* {beforeInputs} */}
+            <summary className={inputs.type}>
               <input
                 type="text"
                 value={key}
@@ -205,7 +158,7 @@ const FormatValue = ({
           </details>
         </div>
       ) : (
-        <Format inputs={inputs} disabled={inputs.type == "array"} />
+        <Format input={inputs} disabled={inputs.type == "array"} />
       )}
 
       <DynamicButton
@@ -214,30 +167,22 @@ const FormatValue = ({
         type={["text", "object", "array"]}
         setNewInputType={setNewInputType}
       />
-      {afterInputs}
+      {/* {afterInputs} */}
     </div>
   );
 };
 
-const Format = ({
-  // currentKey,
-  inputs,
-  disabled,
-}: {
-  // currentKey: string;
-  inputs: Input;
-  disabled?: boolean;
-}) => {
-  // const { value: key, setter: setKey } = useContext(FormatContext);
-  const [key, setKey] = useState<string>(inputs.key);
+const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
+  const { setter } = useContext(FormatContext);
+  const [key, setKey] = useState<string>(input.key);
   const [sep, setSep] = useState<string>("");
   const [id, setId] = useState<string>("");
+
+  const defaultValue = input.defaultValue?.split(sep);
   const [value, setValue] = useState<{
     [x: string]: string;
-  }>({ 0: inputs.defaultValue ?? "" });
-  const [values, setValues] = useState<{
-    [x: string]: string | number;
-  }>({});
+  }>(sep ? Object(defaultValue) : { 0: input.defaultValue ?? "" });
+
   const handleDeleteKey: MouseEventHandler = (e) => {
     const target = e.target as HTMLButtonElement;
   };
@@ -249,28 +194,24 @@ const Format = ({
     setSep(target.value);
   };
   const handleClickAddSeparator: MouseEventHandler = () => {
-    const lastIndex = Object.values(values).length;
-    setValues((prev) => ({
+    const lastIndex = Object.values(value).length;
+    setValue((prev) => ({
       ...prev,
-      [lastIndex]: {
-        key: key,
-        value: "",
-      },
+      [lastIndex]: "",
     }));
   };
+
   useEffect(() => {
-    if (!key) return;
+    if (!setter) return;
     const currentValue = (sep ?? "") + Object.values(value).join(sep ?? "");
     const newValue = {
       key: key,
-      value: currentValue,
+      defaultValue: currentValue,
+      parentId: input.parentId,
+      id: input.id,
     };
-    setValues((prev) => ({ ...prev, [inputs.id]: newValue }));
+    setter((prev) => [...updateValueById(prev, newValue)]);
   }, [value, key, sep]);
-
-  useEffect(() => {
-    // console.log(values);
-  }, [values]);
 
   const handleChangeInputs: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     const target = e.target as HTMLTextAreaElement;
@@ -292,65 +233,64 @@ const Format = ({
   return (
     <div
       className="w-full"
-      id={inputs.id + ""}
-      key={inputs.id + "text" + "container"}
+      id={input.id + ""}
+      key={input.id + "text" + "container"}
     >
       <details open>
-        <summary>
+        <summary className="text">
           <input
             type="text"
             value={key}
             onChange={(e) => setKey(e.target.value)}
             disabled={disabled}
           />
-          <button id="" onClick={handleDeleteKey}>
-            ❌
+          <label className="flex">
+            separator:
+            <input
+              className="ml-0.5"
+              onChange={handleChangeSep}
+              value={sep}
+              placeholder="input separator"
+            />
+          </label>
+          <button id="" onClick={handleDeleteKey} className="shrink-0">
+            ❌ delete all
           </button>
         </summary>{" "}
-        {Object.values(values).map((input, idx) => {
+        {Object.values(value).map((inp, idx) => {
           return (
-            <div key={inputs.id + "text" + idx} className="w-full">
-              <div className="w-full flex">
-                {!!sep && (
-                  <span className=" bg-slate-200 rounded-md py-0.5 px-2 mr-5 ">
-                    {sep}
-                  </span>
-                )}
-                <button
-                  id=""
-                  onClick={handleDeleteText}
-                  className="bg-slate-200 ml-auto mr-0 group"
-                  disabled={Object.values(values).length == 1}
-                >
-                  <span className="scale-0 group-hover:scale-100">
-                    delete under text{" "}
-                  </span>
-                  ✖️
-                </button>
+            <div
+              key={"text" + idx + input.id}
+              className="w-full flex flex-wrap"
+            >
+              <div className="flex w-full mt-0.5 shrink-0">
+                <span className=" bg-slate-200 rounded-md py-0.5 px-2 mr-0.5">
+                  {!!sep ? sep : " "}
+                </span>
+                <textarea
+                  ref={textRef}
+                  id={idx + ""}
+                  className="block"
+                  value={inp ?? ""}
+                  onChange={handleChangeInputs}
+                  placeholder="stardew valley"
+                />
               </div>
-              <textarea
-                ref={textRef}
-                id={idx + ""}
-                className="block"
-                value={value[idx] ?? ""}
-                onChange={handleChangeInputs}
-              />
+              <button
+                id=""
+                onClick={handleDeleteText}
+                className="bg-slate-200 ml-auto mr-0 group"
+                disabled={Object.values(value).length == 1}
+              >
+                ✖️ DEL text
+              </button>
             </div>
           );
         })}
-        <div className="flex ml-auto p-1">
-          <div className="bg-slate-200	rounded-md">
-            <button onClick={handleClickAddSeparator}>➕</button>
-            <button disabled className="rounded-md">
-              ✂️
-            </button>
+        <div className="p-1">
+          <div className="ml-auto mr-0 w-fit">
+            <button onClick={handleClickAddSeparator}>➕ ADD text</button>
           </div>
-          <input
-            className="p-0 px-5 w-50"
-            onChange={handleChangeSep}
-            value={sep}
-            placeholder="input separator"
-          />
         </div>
       </details>
     </div>
