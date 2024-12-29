@@ -1,11 +1,11 @@
 import { Input, Inputs } from "../type/types";
 
 const updateValueById = (inputs: Inputs, newValue: Partial<Input>): Inputs => {
-  const targetDepth = newValue.parentId!.length;
+  const targetDepth = newValue?.parentId?.length ?? 0;
 
   const recursiveUpdate = (items: Inputs, currentDepth: number): Inputs => {
     return items.map((item) => {
-      if (item.parentId.length === targetDepth && item.id === newValue.id) {
+      if (item.id === newValue.id) {
         return {
           ...item,
           ...newValue,

@@ -2,44 +2,63 @@ import { Input, Inputs } from "../type/types";
 
 const addValueByParentId = (
   inputs: Inputs,
-  parentId: number[],
+  parentId: string[],
   newValue: Input,
-  position?: number
+  position: string
 ): Inputs => {
-  const targetDepth = parentId.length - 1;
+  const targetDepth = parentId.length;
+
+  if (targetDepth === 0) {
+    const targetPositionIndex = inputs.findIndex(
+      (input) => input.id === position
+    );
+    if (targetPositionIndex === -1) {
+      return [...inputs, newValue]; // position이 없을 경우 맨 뒤에 추가
+    }
+    return [
+      ...inputs.slice(0, targetPositionIndex + 1),
+      newValue,
+      ...inputs.slice(targetPositionIndex + 1),
+    ];
+  }
 
   const recursiveUpdate = (items: Inputs, currentDepth: number): Inputs => {
     return items.map((item) => {
-      if (
-        item.parentId.length === targetDepth &&
-        item.parentId.every((id, i) => id === parentId[i])
-      ) {
-        // 현재 depth에서 parentId가 일치하면 value를 업데이트
-        if (!!position) {
+      if (item.id === parentId[currentDepth]) {
+        if (currentDepth === targetDepth - 1) {
+          const targetPositionIndex = Array.isArray(item.value)
+            ? item.value.findIndex((child) => child.id === position)
+            : -1;
+
+          if (!Array.isArray(item.value)) {
+            throw new Error(`Expected an array at depth ${currentDepth}`);
+          }
+
+          if (targetPositionIndex === -1) {
+            return {
+              ...item,
+              value: [...item.value, newValue], // position이 없으면 맨 뒤에 추가
+            };
+          }
+
           return {
             ...item,
             value: [
-              ...item.value.splice(0, position + 1),
+              ...item.value.slice(0, targetPositionIndex + 1),
               newValue,
-              ...item.value,
+              ...item.value.slice(targetPositionIndex + 1),
             ],
           };
-        } else
+        }
+
+        if (Array.isArray(item.value)) {
           return {
             ...item,
-            value: [...item.value, newValue],
+            value: recursiveUpdate(item.value, currentDepth + 1),
           };
+        }
       }
-
-      if (Array.isArray(item.value) && currentDepth < targetDepth) {
-        // value가 배열이고 더 깊은 depth를 탐색해야 할 경우 재귀
-        return {
-          ...item,
-          value: recursiveUpdate(item.value, currentDepth + 1),
-        };
-      }
-
-      return item; // 일치하지 않으면 원본 유지
+      return item; // 일치하지 않는 항목은 그대로 유지
     });
   };
 

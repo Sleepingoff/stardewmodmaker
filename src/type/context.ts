@@ -1,14 +1,12 @@
 import { Dispatch, SetStateAction } from "react";
-import { Inputs } from "./types";
+import { Field, Inputs, LocaleGuidType } from "./types";
 export type ContextValue = {
   value: Inputs;
   setter: Dispatch<SetStateAction<Inputs>> | null;
 };
 
 export type InputContextValue = {
-  value: {
-    [key: string]: object;
-  };
+  value: InputValue;
   setter: Dispatch<SetStateAction<InputValue>> | null;
 };
 

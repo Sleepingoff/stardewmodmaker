@@ -6,7 +6,7 @@ import convertInputsToJson from "../utils/convertInputsToJson";
 
 const JsonPreviewSection = () => {
   const { value } = useContext(MainContext);
-  console.log(value);
+
   const [input, setInput] = useState<[]>([]);
 
   const [copy, setCopy] = useState<boolean>(false);

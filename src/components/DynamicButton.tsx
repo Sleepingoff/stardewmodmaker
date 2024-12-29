@@ -1,43 +1,34 @@
 import React, {
   Dispatch,
   MouseEventHandler,
+  ReactNode,
   SetStateAction,
   useState,
 } from "react";
 import { NewType } from "../type/types";
 
 const DynamicButton = ({
-  id,
-  position,
   type,
-  setNewInputType,
+  text,
+  handleClickTypes,
 }: {
-  id: number;
-  position: number;
   type: string[];
-  setNewInputType: Dispatch<SetStateAction<NewType>>;
+  handleClickTypes: (type: string) => MouseEventHandler;
+  text?: string;
 }) => {
   const [IsClickAddNew, setIsClickAddNew] = useState(false);
 
   const handleClickAddNew: MouseEventHandler = (e) => {
     e.stopPropagation();
     setIsClickAddNew((prev) => !prev);
-    setNewInputType((prev) => ({ target: "", id }));
-  };
-
-  const handleClickType: MouseEventHandler = (e) => {
-    e.stopPropagation();
-    const target = e.target as HTMLButtonElement;
-    if (!target?.id) return;
-    setNewInputType((prev) => ({ target: target.id, id, position }));
   };
   return (
     <div className="p-4 ml-auto mr-5 w-fit">
-      <button onClick={handleClickAddNew}>➕</button>
+      <button onClick={handleClickAddNew}>{text ?? <span>➕</span>}</button>
       {IsClickAddNew && (
         <>
           {type.map((t) => (
-            <button id={t} key={t} onClick={handleClickType}>
+            <button id={t} key={t} onClick={handleClickTypes(t)}>
               {t}
             </button>
           ))}

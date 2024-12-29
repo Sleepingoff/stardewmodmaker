@@ -10,115 +10,69 @@ import {
 } from "react";
 import DynamicButton from "./DynamicButton";
 import { FormatContext } from "../hooks/context";
-import { Input, Inputs, NewType } from "../type/types";
+import { Field, IdField, Input, Inputs, NewType } from "../type/types";
 import { FormatContextValue } from "../type/context";
 import addValueByParentId from "../utils/addValueByParentId";
 import updateValueById from "../utils/updateValueById";
+import { v4 as uuidv4 } from "uuid"; // UUID를 생성하기 위한 패키지
+import deleteValueById from "../utils/deleteValueById";
+import generateNewInput from "../utils/generateNewInput";
+
 interface FormatType {
   separator: string;
   beforeInputs?: string;
   afterInputs?: string;
-  inputs: Input;
+  inputs: IdField;
   disabled?: boolean;
-  position?: number;
 }
-
-const randomTextValueOnDisabledInput = (): string => {
-  const randomTextArray = ["Go!!", "Need No! Key"];
-  const randomIndex = Math.floor(Math.random() * randomTextArray.length);
-  return randomTextArray[randomIndex] ?? "❤️";
-};
 
 const FormatValue = ({
   beforeInputs,
   afterInputs,
   disabled,
   inputs,
-  position,
 }: FormatType) => {
   const { value, setter }: FormatContextValue = useContext(FormatContext);
   const handleDeleteKey: MouseEventHandler = (e) => {
-    const target = e.target as HTMLButtonElement;
-  };
-  const [currentInputs, setCurrentInputs] = useState<Inputs>(inputs!.value);
-  const [parentId, setParentId] = useState<number[]>(inputs.parentId);
-
-  const [type, setNewInputType] = useState<NewType>({
-    target: "",
-    id: "",
-  });
-  useEffect(() => {
-    if (!type.target) return;
-    const newType = type.target as string;
-    const newId = (inputs.id + new Date().getSeconds()) * 100;
-    const newInputs =
-      type.target == "text"
-        ? {
-            id: newId,
-            key: newId + "",
-            value: [],
-            type: newType,
-            defaultValue: " ",
-            parentId: parentId,
-          }
-        : {
-            id: newId,
-            key: newId + "",
-            value: [
-              {
-                id: newId * 10,
-                key: newId * 10 + "",
-                value: [],
-                type: "text",
-                defaultValue: " ",
-                parentId: [...parentId, newId],
-              },
-            ],
-            type: newType,
-            parentId: parentId,
-          };
-
-    // addInputs((prev) => {
-    //   return [...prev, newInputs];
-    // });
-    setNewInputType((prev) => ({ ...prev, target: "" }));
     if (!setter) return;
-    const addPosition = position
-      ? currentInputs.findIndex((inp) => inp.id == position)
-      : currentInputs.length;
-    if (parentId.length == 0) {
-      setter((prev: Inputs) =>
-        addPosition != -1
-          ? [...prev.splice(0, addPosition + 1), newInputs, ...prev]
-          : [...prev, newInputs]
-      );
-    } else {
-      setter((prev) => [
-        ...addValueByParentId(prev, parentId, newInputs, addPosition),
-      ]);
-    }
-  }, [type]);
+    setter((prev) => [...deleteValueById(prev, inputs)]);
+  };
+  const [currentInputs, setCurrentInputs] = useState<IdField[]>(inputs!.value);
 
   useEffect(() => {
     //!inputs 상태 변경 인식을 잘 못하는 문제때문에 작성
-    //복사되는 깊이 문제인듯?
     setCurrentInputs(inputs.value || []);
   }, [inputs]);
 
-  //inputs: 부모 객체 or 추가한 객체
-  //currentInputs: inputs.value 즉 자식 배열
-  //currentInputs 수정 -> inputs.value 수정
-  //addInputs: 부모 객체가 속한 자식 배열 수정
+  const [key, setKey] = useState<string>(inputs.key);
 
-  const [key, setKey] = useState<string>(
-    disabled ? randomTextValueOnDisabledInput() : inputs.key ?? ""
-  );
+  const handleClickAddNewValueIn =
+    (type: string): MouseEventHandler<HTMLButtonElement> =>
+    (e) => {
+      const newInputs = generateNewInput(type, inputs);
+      if (!setter) return;
+      setter((prev) => [
+        ...addValueByParentId(
+          prev,
+          [...inputs.parentId, inputs.id],
+          newInputs,
+          inputs.id
+        ),
+      ]);
+    };
+
+  const handleClickAddNewValueOut =
+    (type: string): MouseEventHandler<HTMLButtonElement> =>
+    (e) => {
+      const newInputs = generateNewInput(type, inputs);
+      if (!setter) return;
+
+      setter((prev) => [
+        ...addValueByParentId(prev, inputs.parentId, newInputs, inputs.id),
+      ]);
+    };
   return (
-    <div
-      key={inputs.id + (inputs.type[0] as string)}
-      id={inputs.id + ""}
-      className=""
-    >
+    <div key={inputs.id} id={inputs.id} className="">
       {!inputs?.defaultValue ? (
         <div className="w-full">
           <details open>
@@ -136,36 +90,45 @@ const FormatValue = ({
             </summary>
             {currentInputs.map((input, idx) => {
               return (
-                <FormatValue
-                  key={idx + inputs.type + input.id}
-                  position={input.id}
-                  disabled={inputs.type == "array"}
-                  separator={","}
-                  beforeInputs={
-                    idx == 0 ? (inputs.type == "array" ? "[" : "{") : ""
-                  }
-                  afterInputs={
-                    idx == currentInputs.length - 1
-                      ? inputs.type == "array"
-                        ? "]"
-                        : "}"
-                      : ""
-                  }
-                  inputs={input}
-                />
+                <div key={input.id}>
+                  <FormatValue
+                    disabled={inputs.type == "array"}
+                    separator={","}
+                    beforeInputs={
+                      idx == 0 ? (inputs.type == "array" ? "[" : "{") : ""
+                    }
+                    afterInputs={
+                      idx == currentInputs.length - 1
+                        ? inputs.type == "array"
+                          ? "]"
+                          : "}"
+                        : ""
+                    }
+                    inputs={
+                      inputs.type == "array"
+                        ? { ...input, key: idx + "" }
+                        : { ...input }
+                    }
+                  />
+                </div>
               );
             })}
+            {currentInputs.length == 0 && inputs.type != "text" && (
+              <DynamicButton
+                type={["text", "object", "array"]}
+                handleClickTypes={handleClickAddNewValueIn}
+                text=" add new value"
+              />
+            )}
           </details>
         </div>
       ) : (
-        <Format input={inputs} disabled={inputs.type == "array"} />
+        <Format input={inputs} disabled={disabled} />
       )}
 
       <DynamicButton
-        id={inputs.id}
-        position={position ?? 0}
         type={["text", "object", "array"]}
-        setNewInputType={setNewInputType}
+        handleClickTypes={handleClickAddNewValueOut}
       />
       {/* {afterInputs} */}
     </div>
@@ -176,34 +139,56 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
   const { setter } = useContext(FormatContext);
   const [key, setKey] = useState<string>(input.key);
   const [sep, setSep] = useState<string>("");
-  const [id, setId] = useState<string>("");
+  const [id, setId] = useState<string[]>(["0"]);
 
-  const defaultValue = input.defaultValue?.split(sep);
   const [value, setValue] = useState<{
     [x: string]: string;
-  }>(sep ? Object(defaultValue) : { 0: input.defaultValue ?? "" });
+  }>({ 0: input.defaultValue ?? "" });
 
   const handleDeleteKey: MouseEventHandler = (e) => {
-    const target = e.target as HTMLButtonElement;
+    if (!setter) return;
+    setter((prev) => [...deleteValueById(prev, input)]);
   };
-  const handleDeleteText: MouseEventHandler = (e) => {
-    const target = e.target as HTMLButtonElement;
-  };
+  const handleClickDeleteText =
+    (idx: string): MouseEventHandler =>
+    () => {
+      if (id.length === 1) return; // `id` 배열에 하나만 남아있을 때 삭제를 방지
+
+      setId((prev) => prev.filter((pr) => pr !== idx)); // 삭제 대상 제외
+      setValue((prev) => {
+        const updatedValue = { ...prev };
+        delete updatedValue[idx]; // 해당 `idx`를 가진 값을 삭제
+        return updatedValue;
+      });
+    };
+
   const handleChangeSep: ChangeEventHandler<HTMLInputElement> = (e) => {
     const target = e.target as HTMLInputElement;
     setSep(target.value);
   };
-  const handleClickAddSeparator: MouseEventHandler = () => {
-    const lastIndex = Object.values(value).length;
-    setValue((prev) => ({
-      ...prev,
-      [lastIndex]: "",
-    }));
-  };
+  const handleClickAddSeparator =
+    (idx: string): MouseEventHandler =>
+    () => {
+      const targetIndex = id.findIndex((i) => i == idx);
+      const newId = uuidv4();
+      setId((prev) => {
+        return [...prev.splice(0, targetIndex + 1), newId, ...prev];
+      });
+      setValue((prev) => ({
+        ...prev,
+        [newId]: "",
+      }));
+    };
 
   useEffect(() => {
     if (!setter) return;
-    const currentValue = (sep ?? "") + Object.values(value).join(sep ?? "");
+    //value[idx]가 빈 값이 아닐 때만 currentValue에 추가
+    const currentValue =
+      (sep ?? "") +
+      id
+        .map((i) => value[i])
+        .filter((v) => !!v)
+        .join(sep ?? "");
     const newValue = {
       key: key,
       defaultValue: currentValue,
@@ -215,7 +200,6 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
 
   const handleChangeInputs: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     const target = e.target as HTMLTextAreaElement;
-    setId((prev) => target.id);
     setValue((prev) => ({
       ...prev,
       [target.id]: target.value,
@@ -231,11 +215,7 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
   }, [value]);
 
   return (
-    <div
-      className="w-full"
-      id={input.id + ""}
-      key={input.id + "text" + "container"}
-    >
+    <div className="w-full" id={input.id} key={input.id}>
       <details open>
         <summary className="text">
           <input
@@ -253,44 +233,41 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
               placeholder="input separator"
             />
           </label>
-          <button id="" onClick={handleDeleteKey} className="shrink-0">
-            ❌ delete all
+          <button onClick={handleDeleteKey} className="shrink-0">
+            ❌ delete {key}
           </button>
-        </summary>{" "}
-        {Object.values(value).map((inp, idx) => {
+        </summary>
+        {/* 없는 id를 넣어서 가장 맨 앞에 추가 */}
+        <button onClick={handleClickAddSeparator("-1")}>➕ ADD text</button>
+        {id.map((i) => {
           return (
-            <div
-              key={"text" + idx + input.id}
-              className="w-full flex flex-wrap"
-            >
+            <div key={i} className="w-full flex flex-wrap">
               <div className="flex w-full mt-0.5 shrink-0">
                 <span className=" bg-slate-200 rounded-md py-0.5 px-2 mr-0.5">
                   {!!sep ? sep : " "}
                 </span>
                 <textarea
                   ref={textRef}
-                  id={idx + ""}
+                  id={i}
                   className="block"
-                  value={inp ?? ""}
+                  value={value[i] ?? ""}
                   onChange={handleChangeInputs}
                   placeholder="stardew valley"
                 />
               </div>
               <button
-                id=""
-                onClick={handleDeleteText}
+                onClick={handleClickDeleteText(i)}
                 className="bg-slate-200 ml-auto mr-0 group"
-                disabled={Object.values(value).length == 1}
+                disabled={id.length == 1}
               >
                 ✖️ DEL text
               </button>
+              <button onClick={handleClickAddSeparator(i)}>➕ ADD text</button>
             </div>
           );
         })}
         <div className="p-1">
-          <div className="ml-auto mr-0 w-fit">
-            <button onClick={handleClickAddSeparator}>➕ ADD text</button>
-          </div>
+          <div className="ml-auto mr-0 w-fit"></div>
         </div>
       </details>
     </div>
