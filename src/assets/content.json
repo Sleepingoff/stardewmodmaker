@@ -23,6 +23,12 @@
                         "type": "object",
                         "value": [
                             {
+                                "key": "LogName",
+                                "value": [],
+                                "defaultValue": "Log Name",
+                                "type": "log"
+                            },
+                            {
                                 "key": "Action",
                                 "value": [],
                                 "type": "text",
@@ -108,6 +114,13 @@
                         "key": "0",
                         "type": "object",
                         "value": [
+                            {
+                                "key": "LogName",
+                                "value": [],
+                                "defaultValue": "Log Name",
+                                "type": "log",
+                                "description": "중복된 LogName이 있을 경우 첫번째 LogName만 json에 표시됩니다."
+                            },
                             {
                                 "key": "Action",
                                 "value": [],

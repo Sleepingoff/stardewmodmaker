@@ -49,20 +49,18 @@ const InputSection = () => {
         <header className="relative">
           <hgroup className="flex w-full overflow-auto">
             {tabs.map((tab, idx) => (
-              <button
-                key={idx}
-                onClick={handleClickTab}
-                id={idx + ""}
-                className="p-0"
-              >
-                <input
-                  type="text"
-                  value={tab}
-                  onChange={handleChangeTabName}
-                  id={idx + ""}
-                  className="block w-full shrink py-2.5"
-                />
-              </button>
+              <h2 key={idx}>
+                <span className="a11y-hidden">{tab}</span>
+                <button onClick={handleClickTab} id={idx + ""} className="p-0">
+                  <input
+                    type="text"
+                    value={tab}
+                    onChange={handleChangeTabName}
+                    id={idx + ""}
+                    className="block w-full shrink py-2.5"
+                  />
+                </button>
+              </h2>
             ))}
           </hgroup>
           <button

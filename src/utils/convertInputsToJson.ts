@@ -13,6 +13,10 @@ const convertInputsToJson = (inputs: Field[]): Record<string, any> => {
             ? recursiveConvert(subItem.value)
             : subItem.defaultValue ?? subItem.value
         );
+      } else if (item.type === "log") {
+        if (!("LogName" in acc)) {
+          acc["LogName"] = item.defaultValue;
+        }
       } else {
         // 기본 값 처리
         acc[item.key] = item.defaultValue ?? item.value;

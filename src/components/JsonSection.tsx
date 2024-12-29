@@ -4,10 +4,12 @@ import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { MainContext } from "../hooks/context";
 import convertInputsToJson from "../utils/convertInputsToJson";
 
-const JsonPreviewSection = () => {
+const JsonPreviewSection = ({
+  currentScrollLine,
+}: {
+  currentScrollLine?: number;
+}) => {
   const { value } = useContext(MainContext);
-
-  const [input, setInput] = useState<[]>([]);
 
   const [copy, setCopy] = useState<boolean>(false);
 
@@ -26,7 +28,19 @@ const JsonPreviewSection = () => {
       <h2 className="text-lg font-semibold mb-4">JSON Preview</h2>
       {copy ? <p>copied!</p> : <button onClick={handleClickCopy}>copy</button>}
       {value && (
-        <SyntaxHighlighter language="json" style={vscDarkPlus}>
+        <SyntaxHighlighter
+          language="json"
+          style={vscDarkPlus}
+          wrapLines={true}
+          showLineNumbers={true}
+          lineProps={(lineNumber) => {
+            const style: any = { display: "block", width: "fit-content" };
+            if (currentScrollLine && currentScrollLine == lineNumber) {
+              style.backgroundColor = "#FFDB81";
+            }
+            return { style };
+          }}
+        >
           {JSON.stringify(convertInputsToJson(value), null, "\t")}
         </SyntaxHighlighter>
       )}

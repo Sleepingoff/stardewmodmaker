@@ -32,7 +32,7 @@ interface FormatType {
 const FormatValue = ({
   disabled,
   inputs,
-  availableTypes = ["text", "object", "array", "number", "checkbox"],
+  availableTypes = ["log", "text", "number", "checkbox", "object", "array"],
   template = [],
 }: FormatType) => {
   const { value, setter }: FormatContextValue = useContext(FormatContext);
@@ -253,6 +253,10 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
   if (input.type == "checkbox") {
     return <FormatCheckBox input={input} />;
   }
+
+  if (input.type == "log") {
+    return <FormatLog input={input} />;
+  }
   return (
     <div className="w-full" id={input.id} key={input.id}>
       <details open>
@@ -421,5 +425,51 @@ const FormatCheckBox = ({ input }: { input: Input }) => {
         ❌
       </button>
     </label>
+  );
+};
+
+const FormatLog = ({ input }: { input: Input }) => {
+  const { setter }: FormatContextValue = useContext(FormatContext);
+  const [value, setValue] = useState<string>(input.defaultValue as string);
+  const handleDeleteKey: MouseEventHandler = (e) => {
+    if (!setter) return;
+    setter((prev) => [...deleteValueById(prev, input)]);
+  };
+  const handleChangeTextarea: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+    const target = e.target as HTMLTextAreaElement;
+    setValue(target.value);
+  };
+  const textRef = useRef(null);
+
+  useEffect(() => {
+    if (!textRef.current) return;
+    const textareaElement = textRef.current as HTMLTextAreaElement;
+    textareaElement.style.height = `${textareaElement.scrollHeight}px`;
+    if (!setter) return;
+    setter((prev) => [
+      ...updateValueById(prev, { ...input, defaultValue: value }),
+    ]);
+  }, [value]);
+  return (
+    <div className="w-full" id={input.id} key={input.id}>
+      <hgroup className="flex w-full">
+        <h3>
+          LogName <span className="a11y-hidden">{value}</span>
+        </h3>
+        <button onClick={handleDeleteKey} className="shrink-0 ml-auto">
+          ❌
+        </button>
+      </hgroup>
+      <p className="w-full font-normal">✏️{input.description}</p>
+
+      <textarea
+        ref={textRef}
+        id={input.id}
+        className="block"
+        value={value ?? ""}
+        onChange={handleChangeTextarea}
+        placeholder={input.placeholder ?? "input Log Name"}
+      />
+    </div>
   );
 };
