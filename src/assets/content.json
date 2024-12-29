@@ -14,6 +14,95 @@
             {
                 "key": "Changes",
                 "type": "array",
+                "availableTypes": [
+                    "object"
+                ],
+                "template": [
+                    {
+                        "key": "0",
+                        "type": "object",
+                        "value": [
+                            {
+                                "key": "Action",
+                                "value": [],
+                                "type": "text",
+                                "inputType": "select",
+                                "defaultValue": "Load",
+                                "availableValues": [
+                                    "Load",
+                                    "EditImage",
+                                    "EditData",
+                                    "EditMap",
+                                    "Include"
+                                ]
+                            },
+                            {
+                                "key": "Target",
+                                "value": [],
+                                "type": "text",
+                                "defaultValue": "Characters",
+                                "inputType": "select",
+                                "availableValues": [
+                                    "Characters",
+                                    "Data",
+                                    "TileSheets",
+                                    "Animals",
+                                    "Buildings",
+                                    "Effects",
+                                    "Fonts",
+                                    "LooseSprites",
+                                    "Maps",
+                                    "Minigames",
+                                    "Portraits",
+                                    "Strings",
+                                    "TerrainFeatures",
+                                    "volcanoLayouts",
+                                    "Mods"
+                                ],
+                                "separator": "/"
+                            },
+                            {
+                                "key": "FromFile",
+                                "value": [],
+                                "type": "text",
+                                "defaultValue": "assets/",
+                                "tooltipForAdditionalExplanation": "자신의 모드 하위 파일 경로를 입력해주세요. 상위 폴더로 가는 행위는 게임에서 허락하지 않습니다."
+                            },
+                            {
+                                "key": "FromArea",
+                                "type": "object",
+                                "value": [
+                                    {
+                                        "key": "X",
+                                        "value": [],
+                                        "type": "number",
+                                        "defaultValue": 0
+                                    },
+                                    {
+                                        "key": "Y",
+                                        "value": [],
+                                        "type": "number",
+                                        "defaultValue": 0
+                                    },
+                                    {
+                                        "key": "Width",
+                                        "value": [],
+                                        "type": "number",
+                                        "defaultValue": 0
+                                    },
+                                    {
+                                        "key": "Height",
+                                        "value": [],
+                                        "type": "number",
+                                        "defaultValue": 0
+                                    }
+                                ],
+                                "requireAllKeys": true,
+                                "tooltipForAdditionalExplanation": "모드의 이미지 중 반영하고 싶은 부분. pixel 단위. ToArea와 width, height가 같아야 합니다."
+                            }
+                        ]
+                    }
+                ],
                 "value": [
                     {
                         "key": "0",

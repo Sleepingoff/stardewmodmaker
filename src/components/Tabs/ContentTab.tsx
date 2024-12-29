@@ -24,6 +24,8 @@ const ContentTab = () => {
       1: inputs,
     }));
   }, [inputs, setter]);
+
+  console.log(inputs);
   return (
     <section>
       <FormatContext.Provider value={{ value: inputs, setter: setInputs }}>

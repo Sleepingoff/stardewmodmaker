@@ -4,10 +4,12 @@ export interface Field extends Object {
   key: string;
   type: string;
   value: Field[];
+  template?: Field[];
   defaultValue?: string | number | boolean;
   placeholder?: string;
   description?: string;
   tooltipForAdditionalExplanation?: string;
+  availableTypes?: string[];
 }
 
 export interface LocaleGuidType {
@@ -26,14 +28,13 @@ export interface IdGuidType {
     [locale: string]: IdField[];
   };
 }
-
+export type IdField = IdType & Field;
 interface IdType {
   id: string;
   parentId: string[];
   value: IdField[];
+  template: IdField[];
 }
-
-export type IdField = IdType & Field;
 
 export type Input = IdField;
 

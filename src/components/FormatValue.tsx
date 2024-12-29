@@ -17,6 +17,7 @@ import updateValueById from "../utils/updateValueById";
 import { v4 as uuidv4 } from "uuid"; // UUID를 생성하기 위한 패키지
 import deleteValueById from "../utils/deleteValueById";
 import generateNewInput from "../utils/generateNewInput";
+import addUniqueId from "../utils/addUniqueId";
 
 interface FormatType {
   separator: string;
@@ -24,9 +25,16 @@ interface FormatType {
   afterInputs?: string;
   inputs: IdField;
   disabled?: boolean;
+  availableTypes?: string[];
+  template?: Field[];
 }
 
-const FormatValue = ({ disabled, inputs }: FormatType) => {
+const FormatValue = ({
+  disabled,
+  inputs,
+  availableTypes = ["text", "object", "array", "number", "checkbox"],
+  template = [],
+}: FormatType) => {
   const { value, setter }: FormatContextValue = useContext(FormatContext);
   const handleDeleteKey: MouseEventHandler = (e) => {
     if (!setter) return;
@@ -41,25 +49,58 @@ const FormatValue = ({ disabled, inputs }: FormatType) => {
 
   const [key, setKey] = useState<string>(inputs.key);
 
+  useEffect(() => {
+    if (!setter) return;
+
+    const newValue = {
+      ...inputs,
+      key,
+    };
+    setter((prev) => [...updateValueById(prev, newValue)]);
+  }, [key]);
+
   const handleClickAddNewValueIn =
     (type: string): MouseEventHandler<HTMLButtonElement> =>
     (e) => {
-      const newInputs = generateNewInput(type, inputs);
-      if (!setter) return;
-      setter((prev) => [
-        ...addValueByParentId(
-          prev,
-          [...inputs.parentId, inputs.id],
-          newInputs,
-          inputs.id
-        ),
-      ]);
+      let newInputs = generateNewInput(type, inputs);
+      if (template[0]) {
+        newInputs = addUniqueId({
+          InitialRequired: [],
+          locales: { "ko-KR": template },
+        }).locales["ko-KR"][0];
+
+        if (!setter) return;
+        setter((prev) => [
+          ...addValueByParentId(
+            prev,
+            [...inputs.parentId, inputs.id, newInputs.id],
+            newInputs,
+            inputs.id
+          ),
+        ]);
+      } else {
+        if (!setter) return;
+        setter((prev) => [
+          ...addValueByParentId(
+            prev,
+            [...inputs.parentId, inputs.id],
+            newInputs,
+            inputs.id
+          ),
+        ]);
+      }
     };
 
   const handleClickAddNewValueOut =
     (type: string): MouseEventHandler<HTMLButtonElement> =>
     (e) => {
-      const newInputs = generateNewInput(type, inputs);
+      let newInputs = generateNewInput(type, inputs);
+      if (template[0]) {
+        newInputs = addUniqueId({
+          InitialRequired: [],
+          locales: { "ko-KR": template },
+        }).locales["ko-KR"][0];
+      }
       if (!setter) return;
 
       setter((prev) => [
@@ -87,6 +128,12 @@ const FormatValue = ({ disabled, inputs }: FormatType) => {
                 ❌
               </button>
             </summary>
+            {inputs.description && (
+              <p className="font-normal">
+                <span>✏️</span>
+                {inputs.description}
+              </p>
+            )}
             {currentInputs.map((input, idx) => {
               return (
                 <div key={input.id}>
@@ -98,15 +145,18 @@ const FormatValue = ({ disabled, inputs }: FormatType) => {
                         ? { ...input, key: idx + "" }
                         : { ...input }
                     }
+                    template={inputs.template}
+                    // 부모의 availableTypes에 따라 자식의 타입을 제한
+                    availableTypes={inputs.availableTypes}
                   />
                 </div>
               );
             })}
             {currentInputs.length == 0 && isTypeArrayOrObject && (
               <DynamicButton
-                type={["text", "object", "array", "number", "checkbox"]}
+                type={availableTypes}
                 handleClickTypes={handleClickAddNewValueIn}
-                text=" add new value"
+                text="add new value"
               />
             )}
           </details>
@@ -114,8 +164,9 @@ const FormatValue = ({ disabled, inputs }: FormatType) => {
       )}
 
       <DynamicButton
-        type={["text", "object", "array", "number", "checkbox"]}
+        type={availableTypes}
         handleClickTypes={handleClickAddNewValueOut}
+        text="click to add available types :"
       />
       {/* {afterInputs} */}
     </div>
@@ -251,7 +302,7 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
                   className="block"
                   value={(value[i] as string) ?? ""}
                   onChange={handleChangeTextarea}
-                  placeholder="stardew valley"
+                  placeholder={input.placeholder ?? "stardew valley"}
                 />
               </div>
               <button
@@ -326,7 +377,9 @@ const FormatCheckBox = ({ input }: { input: Input }) => {
     setter((prev) => [...deleteValueById(prev, input)]);
   };
   const [key, setKey] = useState<string>(input.key);
-  const [value, setValue] = useState<boolean>(input.defaultValue as boolean);
+  const [value, setValue] = useState<boolean>(
+    input.defaultValue == "true" ? true : false
+  );
 
   const handleCheckInput: ChangeEventHandler<HTMLInputElement> = (e) => {
     setValue((prev) => !prev);
@@ -342,7 +395,7 @@ const FormatCheckBox = ({ input }: { input: Input }) => {
     setter((prev) => [...updateValueById(prev, newValue)]);
   }, [value, key]);
   return (
-    <label className="w-full flex flex-wrap">
+    <label className="w-full flex flex-wrap" key={input.id}>
       <span className="a11y-hidden">{key}</span>
       <input
         className="w-80"

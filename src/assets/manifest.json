@@ -53,21 +53,27 @@
             {
                 "key": "UpdateKeys",
                 "type": "array",
+                "availableTypes": [
+                    "text"
+                ],
                 "value": [
                     {
                         "key": "0",
                         "type": "text",
                         "defaultValue": "Nexus:000",
                         "value": [],
-                        "placeholder": "모드의 업데이트를 출처할 수 있는 키를 입력해주세요. ex) Nexus:000",
-                        "description": "업데이트할 모드의 키를 안내합니다."
+                        "placeholder": "모드의 업데이트를 출처할 수 있는 키를 입력해주세요. ex) Nexus:000"
                     }
                 ],
+                "description": "업데이트할 모드의 키를 안내합니다.",
                 "tooltipForAdditionalExplanation": "네퍼스의 경우, 모드 URL의 가장 마지막 숫자가 업데이트 키가 됩니다."
             },
             {
                 "key": "ContentPackFor",
                 "type": "object",
+                "availableTypes": [
+                    "text"
+                ],
                 "value": [
                     {
                         "key": "UniqueID",
@@ -76,11 +82,15 @@
                         "defaultValue": "Pathoschild.ContentPatcher"
                     }
                 ],
-                "description": "하위 커트 패키에 대한 정보를 설정합니다."
+                "description": "컨텐츠 팩일 경우 해당값을 설정합니다."
             },
             {
                 "key": "Dependencies",
                 "type": "array",
+                "description": "연관된 모드를 설정합니다.",
+                "availableTypes": [
+                    "object"
+                ],
                 "value": [
                     {
                         "key": "0",

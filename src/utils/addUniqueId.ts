@@ -20,7 +20,7 @@ const addUniqueId = <T extends GuideType>(data: T): IdGuidType => {
         } as IdField;
 
         // 재귀적으로 중첩된 value 처리
-        if (Array.isArray(field.value)) {
+        if (field.value.length > 0) {
           updatedField.value = processFields(field.value, [...parentIds, id]);
         }
 

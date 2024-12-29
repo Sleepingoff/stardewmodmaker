@@ -12,6 +12,7 @@ const generateNewInput = (type: string, inputs: Input): Input => {
           type: type,
           defaultValue: " ",
           parentId: inputs.parentId,
+          template: [],
         }
       : {
           id: newId,
@@ -24,10 +25,12 @@ const generateNewInput = (type: string, inputs: Input): Input => {
               type: "text",
               defaultValue: " ",
               parentId: [...inputs.parentId, newId],
+              template: [],
             },
           ],
           type: type,
           parentId: inputs.parentId,
+          template: [],
         };
 
   return newInputs;
