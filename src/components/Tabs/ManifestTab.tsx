@@ -149,6 +149,7 @@ const ManifestTab = () => {
               type: type,
               defaultValue: " ",
               parentId: [],
+              template: [],
             }
           : {
               id: newId,
@@ -161,10 +162,12 @@ const ManifestTab = () => {
                   type: "text",
                   defaultValue: " ",
                   parentId: [newId],
+                  template: [],
                 },
               ],
               type: type,
               parentId: [],
+              template: [],
             };
 
       setInputs((prev) => [newInputs, ...prev]);
