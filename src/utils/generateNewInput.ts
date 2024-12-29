@@ -1,8 +1,53 @@
 import { v4 as uuidv4 } from "uuid"; // UUID를 생성하기 위한 패키지
-import { IdField, Input } from "../type/types";
+import { IdField, Input, Inputs } from "../type/types";
 
-const generateNewInput = (type: string, inputs: Input): Input => {
+const generateNewInput = (type: string, inputs: Input | Inputs): Input => {
   const newId = uuidv4();
+  if (Array.isArray(inputs)) {
+    let newInputs: IdField = {
+      id: newId,
+      key: "new Key" + newId,
+      value: [
+        {
+          id: uuidv4(),
+          key: "new Key in" + newId,
+          value: [],
+          type: "text",
+          defaultValue: " ",
+          parentId: [newId],
+          template: [],
+        },
+      ],
+      type: type,
+      parentId: [],
+      template: [],
+    };
+
+    if (type == "text") {
+      newInputs = {
+        id: newId,
+        key: "new Key" + newId,
+        value: [],
+        type: type,
+        defaultValue: " ",
+        parentId: [],
+        template: [],
+      };
+    }
+    if (type == "log") {
+      newInputs = {
+        id: newId,
+        key: "LogName",
+        value: [],
+        type: type,
+        defaultValue: "new Log",
+        parentId: [],
+        template: [],
+      };
+    }
+
+    return newInputs;
+  }
 
   let newInputs: IdField = {
     id: newId,

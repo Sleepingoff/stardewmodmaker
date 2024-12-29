@@ -7,6 +7,7 @@ import { Input, NewType } from "../../type/types";
 import DynamicButton from "../DynamicButton";
 import { v4 as uuidv4 } from "uuid"; // UUID를 생성하기 위한 패키지
 import addValueByParentId from "../../utils/addValueByParentId";
+import generateNewInput from "../../utils/generateNewInput";
 // [
 //   {
 //     key: "Name",
@@ -139,44 +140,14 @@ const ManifestTab = () => {
   const handleClickTypes =
     (type: string): MouseEventHandler<HTMLButtonElement> =>
     (e) => {
-      const newId = uuidv4();
-      const newInputs =
-        type == "text"
-          ? {
-              id: newId,
-              key: "new Key" + newId,
-              value: [],
-              type: type,
-              defaultValue: " ",
-              parentId: [],
-              template: [],
-            }
-          : {
-              id: newId,
-              key: "new Key" + newId,
-              value: [
-                {
-                  id: uuidv4(),
-                  key: "new Key in" + newId,
-                  value: [],
-                  type: "text",
-                  defaultValue: " ",
-                  parentId: [newId],
-                  template: [],
-                },
-              ],
-              type: type,
-              parentId: [],
-              template: [],
-            };
-
+      const newInputs = generateNewInput(type, inputs);
       setInputs((prev) => [newInputs, ...prev]);
     };
 
   return (
     <section>
       <FormatContext.Provider value={{ value: inputs, setter: setInputs }}>
-        <div className="w-full p-5 pl-0">
+        <div className="w-[40vw] p-5 pl-0">
           <DynamicButton
             type={["text", "object", "array"]}
             handleClickTypes={handleClickTypes}

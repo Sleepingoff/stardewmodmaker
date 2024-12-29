@@ -11,76 +11,41 @@ import { InputValue } from "../type/context";
 import ContentTab from "./Tabs/ContentTab";
 import NewTab from "./Tabs/NewTab";
 import { Inputs } from "../type/types";
+import ScrollSection from "./ScrollSection";
 
-const InputSection = () => {
+const InputSection = ({
+  tabs,
+  currentTab,
+}: {
+  tabs: string[];
+  currentTab: number;
+}) => {
   const { setter: setValue } = useContext(MainContext);
-  const [inputs, setInputs] = useState<InputValue>({
-    0: [],
-    1: [],
-  });
-  const [tabs, setTabs] = useState<string[]>(["manifest", "content"]);
-  const [currentTab, setCurrentTab] = useState<number>(0);
+  const [inputs, setInputs] = useState<InputValue>({});
+  useEffect(() => {
+    tabs.forEach((tab, idx) => {
+      setInputs((prev) => ({ ...prev, [idx]: [] }));
+    });
+  }, []);
 
   useEffect(() => {
     if (!setValue) return;
-    setValue(inputs[+currentTab] as Inputs);
+    setValue(inputs[currentTab] as Inputs);
   }, [inputs, currentTab]);
 
-  const handleClickNewTab: MouseEventHandler = () => {
-    setTabs((prev) => [...prev, "newTab" + (tabs.length - 2)]);
-  };
-  const handleClickTab: MouseEventHandler = (e) => {
-    const target = e.target as HTMLButtonElement;
-    setCurrentTab(+target.id);
-  };
-  const handleChangeTabName: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const target = e.target as HTMLInputElement;
-    if (!target) return;
-    setCurrentTab(+target.id);
-    setTabs((prev) => [
-      ...prev.splice(0, +target.id),
-      target.value,
-      ...prev.splice(1),
-    ]);
-  };
   return (
     <InputContext.Provider value={{ value: inputs, setter: setInputs }}>
-      <section className="w-6/12">
-        <header className="relative">
-          <hgroup className="flex w-full overflow-auto">
-            {tabs.map((tab, idx) => (
-              <h2 key={idx}>
-                <span className="a11y-hidden">{tab}</span>
-                <button onClick={handleClickTab} id={idx + ""} className="p-0">
-                  <input
-                    type="text"
-                    value={tab}
-                    onChange={handleChangeTabName}
-                    id={idx + ""}
-                    className="block w-full shrink py-2.5"
-                  />
-                </button>
-              </h2>
-            ))}
-          </hgroup>
-          <button
-            onClick={handleClickNewTab}
-            className="absolute ml-auto mr-0 inset-0 w-fit h-fit"
-          >
-            +
-          </button>
-        </header>
-        <main className="h-[80vh]	 overflow-auto">
+      <section className="w-fit">
+        <main className="h-[80vh]	 overflow-auto flex relative">
           {tabs.map((tabName, idx) => {
             if (idx == 0 && currentTab == idx)
               return <ManifestTab key={idx + "tab"} />;
             else if (idx == 1 && currentTab == idx)
               return <ContentTab key={idx + "tab"} />;
             else
-              return (
-                currentTab == idx && <NewTab key={idx + "tab"} id={idx + ""} />
-              );
+              return currentTab == idx && <NewTab key={idx + "tab"} id={idx} />;
           })}
+          <ScrollSection />
         </main>
       </section>
     </InputContext.Provider>
