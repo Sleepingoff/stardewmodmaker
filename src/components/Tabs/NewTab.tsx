@@ -2,38 +2,15 @@ import { useContext, useEffect, useState } from "react";
 import { Inputs } from "../../type/types";
 import { FormatContext, InputContext } from "../../hooks/context";
 import FormatValue from "../FormatValue";
-
+import * as ContentGuide from "../../assets/content.json";
+import addUniqueId from "../../utils/addUniqueId";
+const guide = addUniqueId(ContentGuide);
 interface NewTabType {
   id: string;
 }
 const NewTab = ({ id }: NewTabType) => {
   const { setter } = useContext(InputContext);
-  const [inputs, setInputs] = useState<Inputs>([
-    {
-      key: "Changes",
-      parentId: [],
-      value: [
-        {
-          id: 2,
-          key: "0",
-          parentId: [1],
-          value: [
-            {
-              id: 3,
-              parentId: [1, 2],
-              key: "Actions",
-              value: [],
-              defaultValue: "Load",
-              type: "text",
-            },
-          ],
-          type: "object",
-        },
-      ],
-      id: 1,
-      type: "array",
-    },
-  ]);
+  const [inputs, setInputs] = useState<Inputs>(guide.locales["ko-KR"]);
 
   useEffect(() => {
     if (!setter) return;
