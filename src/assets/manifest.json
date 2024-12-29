@@ -95,8 +95,8 @@
                             {
                                 "key": "IsRequired",
                                 "value": [],
-                                "type": "text",
-                                "defaultValue": "true"
+                                "type": "checkbox",
+                                "defaultValue": true
                             },
                             {
                                 "key": "minVersion",

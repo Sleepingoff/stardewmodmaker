@@ -8,6 +8,22 @@
   box-sizing: border-box;
 }
 
+*:has(.a11y-hidden) {
+  position: relative;
+}
+
+.a11y-hidden {
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+}
+
+
 #root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -102,6 +118,48 @@ input:focus::placeholder {
   font-weight: 400;
 }
 
+
+label>input[type="checkbox"]~span {
+  position: relative;
+  display: block;
+  /* margin: auto; */
+  /* margin-left: 1rem; */
+  color: #fff;
+  background-color: #eec4e8;
+  /* border: 1px solid #1a1a1a; */
+  border-radius: 9999px;
+  min-width: 1.25rem;
+  min-height: 1.25rem;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+label>input[type="checkbox"]:checked~span {
+
+  background-color: #747bff;
+
+}
+
+label>input[type="checkbox"]:checked~span::before {
+  content: "O";
+  display: block;
+  position: absolute;
+  bottom: 50%;
+  right: 50%;
+  margin: auto;
+  transform: translate(50%, 50%);
+}
+
+label>input[type="checkbox"]~span::before {
+  content: "X";
+  position: absolute;
+  bottom: 50%;
+  right: 50%;
+  transform: translate(50%, 50%);
+}
+
 textarea {
   background-color: inherit;
   /* box-shadow: inset -5px -5px 10px 2px #8e8e8e5b; */
@@ -159,6 +217,7 @@ summary::before {
   vertical-align: top;
   font-size: 0.8rem;
   text-align: center;
+  flex-shrink: 0;
 }
 
 summary.array::before {

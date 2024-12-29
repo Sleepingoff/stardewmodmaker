@@ -4,7 +4,7 @@ export interface Field extends Object {
   key: string;
   type: string;
   value: Field[];
-  defaultValue?: string;
+  defaultValue?: string | number | boolean;
   placeholder?: string;
   description?: string;
   tooltipForAdditionalExplanation?: string;

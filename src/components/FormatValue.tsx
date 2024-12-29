@@ -26,12 +26,7 @@ interface FormatType {
   disabled?: boolean;
 }
 
-const FormatValue = ({
-  beforeInputs,
-  afterInputs,
-  disabled,
-  inputs,
-}: FormatType) => {
+const FormatValue = ({ disabled, inputs }: FormatType) => {
   const { value, setter }: FormatContextValue = useContext(FormatContext);
   const handleDeleteKey: MouseEventHandler = (e) => {
     if (!setter) return;
@@ -41,7 +36,7 @@ const FormatValue = ({
 
   useEffect(() => {
     //!inputs 상태 변경 인식을 잘 못하는 문제때문에 작성
-    setCurrentInputs(inputs.value || []);
+    setCurrentInputs(inputs.value ?? []);
   }, [inputs]);
 
   const [key, setKey] = useState<string>(inputs.key);
@@ -71,9 +66,13 @@ const FormatValue = ({
         ...addValueByParentId(prev, inputs.parentId, newInputs, inputs.id),
       ]);
     };
+
+  const isTypeArrayOrObject = inputs.type == "array" || inputs.type == "object";
   return (
     <div key={inputs.id} id={inputs.id} className="">
-      {!inputs?.defaultValue ? (
+      {!isTypeArrayOrObject ? (
+        <Format input={inputs} disabled={disabled} />
+      ) : (
         <div className="w-full">
           <details open>
             {/* {beforeInputs} */}
@@ -94,16 +93,6 @@ const FormatValue = ({
                   <FormatValue
                     disabled={inputs.type == "array"}
                     separator={","}
-                    beforeInputs={
-                      idx == 0 ? (inputs.type == "array" ? "[" : "{") : ""
-                    }
-                    afterInputs={
-                      idx == currentInputs.length - 1
-                        ? inputs.type == "array"
-                          ? "]"
-                          : "}"
-                        : ""
-                    }
                     inputs={
                       inputs.type == "array"
                         ? { ...input, key: idx + "" }
@@ -113,21 +102,19 @@ const FormatValue = ({
                 </div>
               );
             })}
-            {currentInputs.length == 0 && inputs.type != "text" && (
+            {currentInputs.length == 0 && isTypeArrayOrObject && (
               <DynamicButton
-                type={["text", "object", "array"]}
+                type={["text", "object", "array", "number", "checkbox"]}
                 handleClickTypes={handleClickAddNewValueIn}
                 text=" add new value"
               />
             )}
           </details>
         </div>
-      ) : (
-        <Format input={inputs} disabled={disabled} />
       )}
 
       <DynamicButton
-        type={["text", "object", "array"]}
+        type={["text", "object", "array", "number", "checkbox"]}
         handleClickTypes={handleClickAddNewValueOut}
       />
       {/* {afterInputs} */}
@@ -142,9 +129,8 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
   const [id, setId] = useState<string[]>(["0"]);
 
   const [value, setValue] = useState<{
-    [x: string]: string;
+    [x: string]: string | number | boolean;
   }>({ 0: input.defaultValue ?? "" });
-
   const handleDeleteKey: MouseEventHandler = (e) => {
     if (!setter) return;
     setter((prev) => [...deleteValueById(prev, input)]);
@@ -183,12 +169,7 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
   useEffect(() => {
     if (!setter) return;
     //value[idx]가 빈 값이 아닐 때만 currentValue에 추가
-    const currentValue =
-      (sep ?? "") +
-      id
-        .map((i) => value[i])
-        .filter((v) => !!v)
-        .join(sep ?? "");
+    const currentValue = (sep ?? "") + id.map((i) => value[i]).join(sep ?? "");
     const newValue = {
       key: key,
       defaultValue: currentValue,
@@ -198,7 +179,7 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
     setter((prev) => [...updateValueById(prev, newValue)]);
   }, [value, key, sep]);
 
-  const handleChangeInputs: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+  const handleChangeTextarea: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     const target = e.target as HTMLTextAreaElement;
     setValue((prev) => ({
       ...prev,
@@ -214,6 +195,13 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
     textareaElement.style.height = `${textareaElement.scrollHeight}px`;
   }, [value]);
 
+  if (input.type == "number") {
+    return <FormatNumber input={input} />;
+  }
+
+  if (input.type == "checkbox") {
+    return <FormatCheckBox input={input} />;
+  }
   return (
     <div className="w-full" id={input.id} key={input.id}>
       <details open>
@@ -233,12 +221,23 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
               placeholder="input separator"
             />
           </label>
-          <button onClick={handleDeleteKey} className="shrink-0">
-            ❌ delete {key}
+          <button onClick={handleDeleteKey} className="shrink-0 ml-auto">
+            ❌
           </button>
         </summary>
         {/* 없는 id를 넣어서 가장 맨 앞에 추가 */}
-        <button onClick={handleClickAddSeparator("-1")}>➕ ADD text</button>
+        {input.description && (
+          <p className="font-normal">
+            <span>✏️</span>
+            {input.description}
+          </p>
+        )}
+        <button
+          className="block m-auto mr-0 w-fit"
+          onClick={handleClickAddSeparator("-1")}
+        >
+          ➕ ADD text
+        </button>
         {id.map((i) => {
           return (
             <div key={i} className="w-full flex flex-wrap">
@@ -250,8 +249,8 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
                   ref={textRef}
                   id={i}
                   className="block"
-                  value={value[i] ?? ""}
-                  onChange={handleChangeInputs}
+                  value={(value[i] as string) ?? ""}
+                  onChange={handleChangeTextarea}
                   placeholder="stardew valley"
                 />
               </div>
@@ -266,11 +265,108 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
             </div>
           );
         })}
-        <div className="p-1">
-          <div className="ml-auto mr-0 w-fit"></div>
-        </div>
       </details>
     </div>
   );
 };
 export default FormatValue;
+
+const FormatNumber = ({ input }: { input: Input }) => {
+  const { setter }: FormatContextValue = useContext(FormatContext);
+
+  const [key, setKey] = useState<string>(input.key);
+  const [value, setValue] = useState<string>(input.defaultValue as string);
+  const handleDeleteKey: MouseEventHandler = (e) => {
+    if (!setter) return;
+    setter((prev) => [...deleteValueById(prev, input)]);
+  };
+
+  const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const target = e.target as HTMLInputElement;
+    setValue((prev) => target.value);
+  };
+
+  useEffect(() => {
+    if (!setter) return;
+    const newValue = {
+      key: key,
+      defaultValue: value,
+      parentId: input.parentId,
+      id: input.id,
+    };
+    setter((prev) => [...updateValueById(prev, newValue)]);
+  }, [value, key]);
+
+  return (
+    <div className="w-full flex" id={input.id} key={input.id}>
+      <input
+        type="text"
+        className="shrink w-20"
+        value={key}
+        onChange={(e) => setKey(e.target.value)}
+      />
+      <span className="w-5 text-center">:</span>
+      <input
+        type="number"
+        className="shrink-0 w-80"
+        value={value ?? 0}
+        onChange={handleChangeInput}
+      />
+      <button onClick={handleDeleteKey} className="shrink-0 w-fit">
+        ❌
+      </button>
+    </div>
+  );
+};
+
+const FormatCheckBox = ({ input }: { input: Input }) => {
+  const { setter }: FormatContextValue = useContext(FormatContext);
+  const handleDeleteKey: MouseEventHandler = (e) => {
+    if (!setter) return;
+    setter((prev) => [...deleteValueById(prev, input)]);
+  };
+  const [key, setKey] = useState<string>(input.key);
+  const [value, setValue] = useState<boolean>(input.defaultValue as boolean);
+
+  const handleCheckInput: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setValue((prev) => !prev);
+  };
+  useEffect(() => {
+    if (!setter) return;
+    const newValue = {
+      key: key,
+      defaultValue: value,
+      parentId: input.parentId,
+      id: input.id,
+    };
+    setter((prev) => [...updateValueById(prev, newValue)]);
+  }, [value, key]);
+  return (
+    <label className="w-full flex flex-wrap">
+      <span className="a11y-hidden">{key}</span>
+      <input
+        className="w-80"
+        type="text"
+        value={key}
+        onChange={(e) => setKey(e.target.value)}
+      />
+      <label className="ml-1 flex">
+        <input
+          className="a11y-hidden"
+          id={input.id}
+          type="checkbox"
+          checked={value}
+          value={`${value ?? ""}`}
+          onChange={handleCheckInput}
+        />
+        <span className="shrink-0"></span>
+        <p className="ml-1 font-normal mr-auto w-5">
+          {value ? "true" : "false"}
+        </p>
+      </label>
+      <button onClick={handleDeleteKey} className="shrink-0 w-fit ml-auto">
+        ❌
+      </button>
+    </label>
+  );
+};

@@ -8,46 +8,14 @@ import {
 import { FormatContext, InputContext } from "../../hooks/context";
 import { Input, Inputs } from "../../type/types";
 import FormatValue from "../FormatValue";
-import convertInputsToJson from "../../utils/convertInputsToJson";
-
+import * as ContentGuide from "../../assets/content.json";
+import addUniqueId from "../../utils/addUniqueId";
+const guide = addUniqueId(ContentGuide);
 const ContentTab = () => {
   const { setter } = useContext(InputContext);
 
   //훅
-  const [inputs, setInputs] = useState<Inputs>([
-    {
-      key: "Format",
-      id: 0,
-      parentId: [],
-      value: [],
-      type: "text",
-      defaultValue: "2.4.0",
-    },
-    {
-      key: "Changes",
-      parentId: [],
-      value: [
-        {
-          id: 2,
-          key: "0",
-          parentId: [1],
-          value: [
-            {
-              id: 3,
-              parentId: [1, 2],
-              key: "Actions",
-              value: [],
-              defaultValue: "Load",
-              type: "text",
-            },
-          ],
-          type: "object",
-        },
-      ],
-      id: 1,
-      type: "array",
-    },
-  ]);
+  const [inputs, setInputs] = useState<Inputs>(guide.locales["ko-KR"]);
   useEffect(() => {
     if (!setter) return;
 
