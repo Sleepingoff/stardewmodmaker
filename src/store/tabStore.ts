@@ -21,7 +21,7 @@ interface TabState {
 export const useTabStore = create<TabState>()(
   persist(
     (set) => ({
-      tabs: ["0", "1"],
+      tabs: ["manifest", "content"],
       templates: [],
       activeTab: "0",
       setTabs: (tabs) => set({ tabs }),

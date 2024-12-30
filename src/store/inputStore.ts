@@ -32,7 +32,7 @@ export const useInputStore = create<InputStore>()(
         set((state) => {
           const newInputs = { ...state.inputs };
           keys.forEach((key) => {
-            if (!newInputs[key]) newInputs[key] = {};
+            if (!newInputs[key]) newInputs[key] = [];
           });
           return { inputs: newInputs };
         }),

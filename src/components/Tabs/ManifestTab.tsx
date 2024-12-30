@@ -130,7 +130,6 @@ const ManifestTab = () => {
   const [inputs, setInputs] = useState<Inputs>(
     value[0] ? (value[0] as Inputs) : guide.locales["ko-KR"]
   );
-
   useEffect(() => {
     if (!setter) return;
 

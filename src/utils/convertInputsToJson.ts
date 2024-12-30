@@ -2,6 +2,7 @@ import { Field } from "../type/types";
 
 const convertInputsToJson = (inputs: Field[]): Record<string, any> => {
   const recursiveConvert = (items: Field[]): Record<string, any> => {
+    if (!Array.isArray(items)) return items;
     return items.reduce((acc, item) => {
       if (item.type === "object") {
         // 객체형 처리

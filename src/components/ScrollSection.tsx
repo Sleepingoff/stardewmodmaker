@@ -67,7 +67,7 @@ const ScrollSection = () => {
 
   return (
     <nav className="w-[2rem] bg-gray-100 h-full shrink-0 sticky top-0 right-0">
-      <div className="p-2">{value && findLogKeys(value)}</div>
+      <div className="p-2">{Array.isArray(value) && findLogKeys(value)}</div>
     </nav>
   );
 };
