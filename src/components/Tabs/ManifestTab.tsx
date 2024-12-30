@@ -122,9 +122,11 @@ import generateNewInput from "../../utils/generateNewInput";
 //     type: "array",
 //   },
 // ];
+
+const guide = addUniqueId(ManifestGuide);
 const ManifestTab = () => {
   const { value, setter } = useContext(InputContext);
-  const guide = addUniqueId(ManifestGuide);
+
   const [inputs, setInputs] = useState<Inputs>(
     value[0] ? (value[0] as Inputs) : guide.locales["ko-KR"]
   );

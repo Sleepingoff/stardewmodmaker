@@ -12,9 +12,11 @@ import * as ContentGuide from "../../assets/content.json";
 import addUniqueId from "../../utils/addUniqueId";
 import DynamicButton from "../DynamicButton";
 import generateNewInput from "../../utils/generateNewInput";
+
+const guide = addUniqueId(ContentGuide);
 const ContentTab = () => {
   const { value, setter } = useContext(InputContext);
-  const guide = addUniqueId(ContentGuide);
+
   const [inputs, setInputs] = useState<Inputs>(
     value[1] ? (value[1] as Inputs) : guide.locales["ko-KR"]
   );

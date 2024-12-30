@@ -1,6 +1,3 @@
-import { PrismAsyncLight as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
-import convertInputsToJson from "../../utils/convertInputsToJson";
 import mergeTemplateWithDefault from "../../utils/mergeTemplateWithDefault";
 import * as ContentGuide from "../../assets/content.json";
 import addUniqueId from "../../utils/addUniqueId";
@@ -10,6 +7,7 @@ import { MouseEventHandler, useContext, useEffect, useState } from "react";
 import generateNewInput from "../../utils/generateNewInput";
 import { Inputs } from "../../type/types";
 import FormatValue from "../FormatValue";
+
 const TempTab = ({ id, temp }: { id: string; temp: any }) => {
   const { value, setter } = useContext(InputContext);
   const template = mergeTemplateWithDefault(
@@ -42,7 +40,7 @@ const TempTab = ({ id, temp }: { id: string; temp: any }) => {
       <FormatContext.Provider value={{ value: inputs, setter: setInputs }}>
         <div className="w-[40vw] p-5 pl-0">
           <DynamicButton
-            type={["text", "object", "array"]}
+            type={["log", "text", "object", "array"]}
             handleClickTypes={handleClickTypes}
           />
           {inputs.map((input) => (

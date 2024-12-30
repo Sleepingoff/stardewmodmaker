@@ -371,7 +371,7 @@ const FormatNumber = ({ input }: { input: Input }) => {
         value={value ?? 0}
         onChange={handleChangeInput}
       />
-      <button onClick={handleDeleteKey} className="shrink-0 w-fit">
+      <button onClick={handleDeleteKey} className="shrink-0 w-fit ml-auto">
         ❌
       </button>
     </div>
@@ -457,7 +457,7 @@ const FormatLog = ({ input }: { input: Input }) => {
   return (
     <div className="w-full" id={input.id} key={input.id}>
       <hgroup className="flex w-full log">
-        <h3>
+        <h3 className="font-black	">
           LogName <span className="a11y-hidden">{value}</span>
         </h3>
         <button onClick={handleDeleteKey} className="shrink-0 ml-auto">

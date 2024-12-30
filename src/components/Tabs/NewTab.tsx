@@ -12,9 +12,10 @@ import { TemplateType } from "../../type/template";
 interface NewTabType {
   id: string;
 }
+const guide = addUniqueId(ContentGuide);
 const NewTab = ({ id }: NewTabType) => {
   const { value, setter } = useContext(InputContext);
-  const guide = addUniqueId(ContentGuide);
+
   const [inputs, setInputs] = useState<Inputs>(
     value[id] ? (value[id] as Inputs) : guide.locales["ko-KR"]
   );
