@@ -24,8 +24,10 @@ const JsonPreviewSection = ({
     }, 3000);
   }, [copy]);
   return (
-    <section className="w-full h-[80vh]">
-      {copy ? <p>copied!</p> : <button onClick={handleClickCopy}>copy</button>}
+    <section className="w-full h-[80vh] relative">
+      <button className="absolute right-2 top-5" onClick={handleClickCopy}>
+        {copy ? "copied!" : "copy"}
+      </button>
       {value && (
         <SyntaxHighlighter
           language="json"

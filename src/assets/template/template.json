@@ -1,0 +1,25 @@
+{
+    "InitialRequired": [
+        "key",
+        "value",
+        "type",
+        "template"
+    ],
+    "template": {
+        "key": "",
+        "template": [],
+        "type": "",
+        "availableTypes": [],
+        "value": [],
+        "defaultValue": "",
+        "description": "",
+        "placeholder": "",
+        "inputType": "select",
+        "availableValues": [
+            ""
+        ],
+        "separator": "/",
+        "tooltipForAdditionalExplanation": "",
+        "requireAllKeys": true
+    }
+}

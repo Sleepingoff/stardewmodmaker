@@ -6,13 +6,18 @@ import * as ContentGuide from "../../assets/content.json";
 import addUniqueId from "../../utils/addUniqueId";
 import generateNewInput from "../../utils/generateNewInput";
 import DynamicButton from "../DynamicButton";
-const guide = addUniqueId(ContentGuide);
+import mergeTemplateWithDefault from "../../utils/mergeTemplateWithDefault";
+import { TemplateType } from "../../type/template";
+
 interface NewTabType {
-  id: number;
+  id: string;
 }
 const NewTab = ({ id }: NewTabType) => {
-  const { setter } = useContext(InputContext);
-  const [inputs, setInputs] = useState<Inputs>(guide.locales["ko-KR"]);
+  const { value, setter } = useContext(InputContext);
+  const guide = addUniqueId(ContentGuide);
+  const [inputs, setInputs] = useState<Inputs>(
+    value ? (value[id] as Inputs) : guide.locales["ko-KR"]
+  );
 
   useEffect(() => {
     if (!setter) return;
@@ -27,6 +32,7 @@ const NewTab = ({ id }: NewTabType) => {
       const newInputs = generateNewInput(type, inputs);
       setInputs((prev) => [newInputs, ...prev]);
     };
+
   return (
     <section key={id + "newTab"}>
       <FormatContext.Provider value={{ value: inputs, setter: setInputs }}>

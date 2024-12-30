@@ -1,0 +1,49 @@
+{
+    "key": "temp-include",
+    "type": "object",
+    "template": [
+        {
+            "key": "LogName",
+            "value": [],
+            "defaultValue": "Include content file",
+            "type": "log"
+        },
+        {
+            "key": "Action",
+            "value": [],
+            "type": "text",
+            "defaultValue": "Include"
+        },
+        {
+            "key": "Target",
+            "value": [],
+            "type": "text",
+            "defaultValue": "Characters",
+            "inputType": "select",
+            "availableValues": [
+                "Characters",
+                "Data",
+                "TileSheets",
+                "Animals",
+                "Buildings",
+                "Effects",
+                "Fonts",
+                "LooseSprites",
+                "Maps",
+                "Minigames",
+                "Portraits",
+                "Strings",
+                "TerrainFeatures",
+                "volcanoLayouts",
+                "Mods"
+            ],
+            "separator": "/"
+        },
+        {
+            "key": "FromFile",
+            "value": [],
+            "type": "text",
+            "defaultValue": "assets/"
+        }
+    ]
+}

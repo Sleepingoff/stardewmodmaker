@@ -376,3 +376,7 @@ div:hover>.bookmark::before {
 .bookmarker:hover>button {
   transform: rotate(45deg);
 }
+
+hgroup.log {
+  border-bottom: 1px solid #1a1a1a;
+}

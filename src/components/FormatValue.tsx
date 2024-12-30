@@ -129,7 +129,7 @@ const FormatValue = ({
               </button>
             </summary>
             {inputs.description && (
-              <p className="font-normal">
+              <p className="font-normal text-sm ml-1">
                 <span>✏️</span>
                 {inputs.description}
               </p>
@@ -176,7 +176,7 @@ const FormatValue = ({
 const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
   const { setter } = useContext(FormatContext);
   const [key, setKey] = useState<string>(input.key);
-  const [sep, setSep] = useState<string>("");
+  const [sep, setSep] = useState<string>(input.separator ?? "");
   const [id, setId] = useState<string[]>(["0"]);
 
   const [value, setValue] = useState<{
@@ -220,7 +220,10 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
   useEffect(() => {
     if (!setter) return;
     //value[idx]가 빈 값이 아닐 때만 currentValue에 추가
-    const currentValue = (sep ?? "") + id.map((i) => value[i]).join(sep ?? "");
+    let currentValue = (sep ?? "") + id.map((i) => value[i]).join(sep ?? "");
+    if (key == "Target" || key == "FromFile") {
+      currentValue = id.map((i) => value[i]).join(sep ?? "");
+    }
     const newValue = {
       key: key,
       defaultValue: currentValue,
@@ -282,7 +285,7 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
         </summary>
         {/* 없는 id를 넣어서 가장 맨 앞에 추가 */}
         {input.description && (
-          <p className="font-normal">
+          <p className="font-normal text-sm">
             <span>✏️</span>
             {input.description}
           </p>
@@ -452,7 +455,7 @@ const FormatLog = ({ input }: { input: Input }) => {
   }, [value]);
   return (
     <div className="w-full" id={input.id} key={input.id}>
-      <hgroup className="flex w-full">
+      <hgroup className="flex w-full log">
         <h3>
           LogName <span className="a11y-hidden">{value}</span>
         </h3>
@@ -460,8 +463,7 @@ const FormatLog = ({ input }: { input: Input }) => {
           ❌
         </button>
       </hgroup>
-      <p className="w-full font-normal">✏️{input.description}</p>
-
+      <p className="w-full font-normal text-sm">✏️{input.description}</p>
       <textarea
         ref={textRef}
         id={input.id}

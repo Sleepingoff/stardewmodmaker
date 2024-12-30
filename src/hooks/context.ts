@@ -6,7 +6,7 @@ import {
 } from "../type/context";
 
 export const InputContext = createContext<InputContextValue>({
-  value: { InitialRequired: [] },
+  value: {},
   setter: null,
 });
 

@@ -3,7 +3,7 @@ import { FormatContext, InputContext } from "../../hooks/context";
 import ManifestGuide from "../../assets/manifest.json";
 import FormatValue from "../FormatValue";
 import addUniqueId from "../../utils/addUniqueId";
-import { Input, NewType } from "../../type/types";
+import { Input, Inputs, NewType } from "../../type/types";
 import DynamicButton from "../DynamicButton";
 import { v4 as uuidv4 } from "uuid"; // UUID를 생성하기 위한 패키지
 import addValueByParentId from "../../utils/addValueByParentId";
@@ -122,11 +122,12 @@ import generateNewInput from "../../utils/generateNewInput";
 //     type: "array",
 //   },
 // ];
-const guide = addUniqueId(ManifestGuide);
 const ManifestTab = () => {
-  const { setter } = useContext(InputContext);
-
-  const [inputs, setInputs] = useState<Input[]>(guide.locales["ko-KR"]);
+  const { value, setter } = useContext(InputContext);
+  const guide = addUniqueId(ManifestGuide);
+  const [inputs, setInputs] = useState<Inputs>(
+    value ? (value[0] as Inputs) : guide.locales["ko-KR"]
+  );
 
   useEffect(() => {
     if (!setter) return;

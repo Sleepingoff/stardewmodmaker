@@ -43,6 +43,8 @@ const generateNewInput = (type: string, inputs: Input | Inputs): Input => {
         defaultValue: "new Log",
         parentId: [],
         template: [],
+        description:
+          "중복된 LogName이 있을 경우 첫번째 LogName만 json에 표시됩니다.",
       };
     }
 
