@@ -71,7 +71,8 @@
                                 "key": "FromFile",
                                 "value": [],
                                 "type": "text",
-                                "defaultValue": "assets/",
+                                "defaultValue": "assets",
+                                "separator": "/",
                                 "tooltipForAdditionalExplanation": "자신의 모드 하위 파일 경로를 입력해주세요. 상위 폴더로 가는 행위는 게임에서 허락하지 않습니다."
                             },
                             {
@@ -164,7 +165,8 @@
                                 "key": "FromFile",
                                 "value": [],
                                 "type": "text",
-                                "defaultValue": "assets/",
+                                "defaultValue": "assets",
+                                "separator": "/",
                                 "tooltipForAdditionalExplanation": "자신의 모드 하위 파일 경로를 입력해주세요. 상위 폴더로 가는 행위는 게임에서 허락하지 않습니다."
                             },
                             {

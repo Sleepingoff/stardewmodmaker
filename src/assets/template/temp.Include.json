@@ -43,7 +43,8 @@
             "key": "FromFile",
             "value": [],
             "type": "text",
-            "defaultValue": "assets/"
+            "defaultValue": "assets",
+            "separator": "/"
         }
     ]
 }

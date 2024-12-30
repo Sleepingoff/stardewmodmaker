@@ -16,7 +16,7 @@ const NewTab = ({ id }: NewTabType) => {
   const { value, setter } = useContext(InputContext);
   const guide = addUniqueId(ContentGuide);
   const [inputs, setInputs] = useState<Inputs>(
-    value ? (value[id] as Inputs) : guide.locales["ko-KR"]
+    value[id] ? (value[id] as Inputs) : guide.locales["ko-KR"]
   );
 
   useEffect(() => {

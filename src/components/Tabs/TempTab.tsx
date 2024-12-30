@@ -13,7 +13,7 @@ import FormatValue from "../FormatValue";
 const TempTab = ({ id, temp }: { id: string; temp: any }) => {
   const { value, setter } = useContext(InputContext);
   const template = mergeTemplateWithDefault(
-    value ? value[id] : temp.content.template,
+    value[id] ? value[id] : temp.content.template,
     ContentGuide
   );
 

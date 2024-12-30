@@ -126,7 +126,7 @@ const ManifestTab = () => {
   const { value, setter } = useContext(InputContext);
   const guide = addUniqueId(ManifestGuide);
   const [inputs, setInputs] = useState<Inputs>(
-    value ? (value[0] as Inputs) : guide.locales["ko-KR"]
+    value[0] ? (value[0] as Inputs) : guide.locales["ko-KR"]
   );
 
   useEffect(() => {

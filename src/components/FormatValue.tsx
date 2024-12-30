@@ -229,6 +229,7 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
       defaultValue: currentValue,
       parentId: input.parentId,
       id: input.id,
+      separator: sep,
     };
     setter((prev) => [...updateValueById(prev, newValue)]);
   }, [value, key, sep]);
