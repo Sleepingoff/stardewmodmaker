@@ -42,7 +42,7 @@ const InputSection = ({
 
   return (
     <InputContext.Provider value={{ value: inputs, setter: setInputs }}>
-      <section className="w-fit">
+      <section className="w-fit shrink">
         <main className="h-[80vh]	 overflow-auto flex relative">
           {currentTab.startsWith("template")
             ? templates.map((temp, idx) => {
@@ -60,7 +60,7 @@ const InputSection = ({
                 if (currentTab == idx + "") {
                   if (idx == 0) return <ManifestTab key={idx + "tab"} />;
                   else if (idx == 1) return <ContentTab key={idx + "tab"} />;
-                  else return <NewTab key={idx + "tab"} id={idx + "tab"} />;
+                  else return <NewTab key={idx + "tab"} id={idx + ""} />;
                 }
               })}
 

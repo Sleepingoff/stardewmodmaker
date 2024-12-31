@@ -23,16 +23,28 @@ const DynamicButton = ({
     setIsClickAddNew((prev) => !prev);
   };
   return (
-    <div className="p-4 ml-auto mr-5 w-fit">
+    <div className="dynamic">
       <button onClick={handleClickAddNew}>{text ?? <span>➕</span>}</button>
       {IsClickAddNew && (
-        <>
+        <label className="flex flex-col	">
           {type.map((t) => (
             <button id={t} key={t} onClick={handleClickTypes(t)}>
-              {t}
+              {t == "log"
+                ? "✏️"
+                : t == "array"
+                ? "[ ]"
+                : t == "object"
+                ? "{ }"
+                : t == "text"
+                ? "TEXT"
+                : t == "number"
+                ? "123"
+                : t == "checkbox"
+                ? "T/F"
+                : t}
             </button>
           ))}
-        </>
+        </label>
       )}
     </div>
   );

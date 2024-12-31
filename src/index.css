@@ -55,6 +55,10 @@ h1 {
   line-height: 1.1;
 }
 
+.flex>*:not(.shrink) {
+  flex-shrink: 0;
+}
+
 button {
   border-radius: 9999px;
   /* border: 1px solid #1a1a1a; */
@@ -221,41 +225,36 @@ textarea:focus::placeholder {
   }
 }
 
-summary::before {
-  width: 18px;
-  height: 18px;
-  margin: .25em;
-  transition: 0.2s;
-  border-radius: 50%;
-  vertical-align: top;
-  font-size: 0.8rem;
-  text-align: center;
-  flex-shrink: 0;
-}
 
-summary.array::before {
-  content: 'A';
-
-  background-color: #eec4e8;
-  color: #b30098;
-
-}
-
-summary.object::before {
-  content: 'O';
-  background-color: #c4c7ee;
-  color: #2100b3;
-}
-
-summary.text::before {
-  content: 'T';
-  background-color: #c4eedd;
-  color: #00b374;
-}
 
 details[open]>summary::before {
   transform: rotate(-45deg);
   font-weight: 900;
+
+}
+
+details>summary {
+  /* display: block; */
+  width: 100%;
+}
+
+details[open]>summary {
+  /* display: block; */
+  min-width: 5vw;
+  margin-right: auto;
+  flex-shrink: 1;
+}
+
+details[open]>summary>p {
+  width: 100%;
+}
+
+details[open]>summary input {
+  height: fit-content;
+}
+
+details[open]>summary~* {
+  flex-shrink: 0;
 }
 
 summary::-webkit-details-marker {
@@ -270,14 +269,13 @@ summary {
   /* background-color: #e0d9d8; */
   color: #303e4e;
   display: flex;
-  height: fit-content;
+  /* height: fit-content; */
 }
 
 details:has(>summary.text) {
   border: none;
 }
 
-details:has(>summary.array) {}
 
 summary.array {
   background-color: #e0d9d8;
@@ -285,14 +283,20 @@ summary.array {
 
 summary.array~div {
   padding: 0.5rem 1.5rem;
+  padding-right: 0;
+}
+
+summary.array~div>details {
+  width: 100%;
 }
 
 summary.object~div {
   padding: 0.5rem 1.5rem;
+  padding-right: 0;
 }
 
-summary.text {
-  border-bottom: 1px solid #1a1a1a;
+summary.object~div>details {
+  width: 100%;
 }
 
 summary>input {
@@ -302,7 +306,7 @@ summary>input {
 
 summary>button {
   margin-left: auto;
-  background-color: #e2e2e2;
+  /* background-color: #e2e2e2; */
 }
 
 summary>button:hover {
@@ -311,29 +315,37 @@ summary>button:hover {
 
 details {
   /* background: #babbbb; */
-  border-radius: 5px;
+  /* border-radius: 5px; */
   /* outline: 1px solid #e0d9d8; */
-  border: 1px solid #e0d9d8;
+  border-top: 1px solid #e0d9d8;
+  border-right: none;
+  border-left: none;
   /* box-shadow: 6px 6px 0px 0px rgb(0, 0, 0); */
   /* margin: 5px; */
   margin-right: 0px;
-
+  position: relative;
 }
 
 details:nth-child(n+1) {
-  margin-top: 20px;
+  /* margin-top: 20px; */
+}
+
+details {
+  width: calc(100% - 4.5rem);
 }
 
 
 details>summary~div {
   font-weight: bolder;
   /* padding: 5px; */
+  display: flex;
 }
 
-details>summary~div>textarea {
+details>summary~div textarea {
   font-weight: 400;
   padding: 5px;
   padding-bottom: 2px;
+  min-width: 15vw;
 }
 
 div>.bookmark {
@@ -377,6 +389,20 @@ div:hover>.bookmark::before {
   transform: rotate(45deg);
 }
 
-hgroup.log {
-  border-bottom: 1px solid #1a1a1a;
+details.log {
+  border-top: 1px solid #1a1a1a;
+  width: calc(100% - 4.5rem);
+}
+
+
+.dynamic {
+  margin-left: 0;
+  margin-right: auto;
+  margin-bottom: 1rem;
+  width: fit-content;
+  height: 100%;
+}
+
+.dynamic>button {
+  background-color: #646cff;
 }

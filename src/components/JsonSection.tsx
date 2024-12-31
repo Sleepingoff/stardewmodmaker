@@ -24,7 +24,7 @@ const JsonPreviewSection = ({
     }, 3000);
   }, [copy]);
   return (
-    <section className="w-full h-[80vh] relative">
+    <section className="w-full shrink h-[80vh] relative">
       <button className="absolute right-2 top-5" onClick={handleClickCopy}>
         {copy ? "copied!" : "copy"}
       </button>

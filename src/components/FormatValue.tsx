@@ -110,64 +110,61 @@ const FormatValue = ({
 
   const isTypeArrayOrObject = inputs.type == "array" || inputs.type == "object";
   return (
-    <div key={inputs.id} id={inputs.id} className="">
+    <div key={inputs.id} id={inputs.id} className="flex w-full">
       {!isTypeArrayOrObject ? (
         <Format input={inputs} disabled={disabled} />
       ) : (
-        <div className="w-full">
-          <details open>
-            {/* {beforeInputs} */}
-            <summary className={inputs.type}>
-              <input
-                type="text"
-                value={key}
-                disabled={disabled}
-                onChange={(e) => setKey(e.target.value)}
+        <details open>
+          {/* {beforeInputs} */}
+          <summary className={inputs.type}>
+            <input
+              type="text"
+              value={key}
+              disabled={disabled}
+              onChange={(e) => setKey(e.target.value)}
+              // className="max-w-[10vw]"
+            />
+          </summary>
+          {inputs.description && (
+            <p className="font-normal text-sm ml-1">
+              <span>✏️</span>
+              {inputs.description}
+            </p>
+          )}
+          {currentInputs.map((input, idx) => {
+            return (
+              <FormatValue
+                key={input.id}
+                disabled={inputs.type == "array"}
+                separator={","}
+                inputs={
+                  inputs.type == "array"
+                    ? { ...input, key: idx + "" }
+                    : { ...input }
+                }
+                template={inputs.template}
+                // 부모의 availableTypes에 따라 자식의 타입을 제한
+                availableTypes={inputs.availableTypes}
               />
-              <button id="" onClick={handleDeleteKey}>
-                ❌
-              </button>
-            </summary>
-            {inputs.description && (
-              <p className="font-normal text-sm ml-1">
-                <span>✏️</span>
-                {inputs.description}
-              </p>
-            )}
-            {currentInputs.map((input, idx) => {
-              return (
-                <div key={input.id}>
-                  <FormatValue
-                    disabled={inputs.type == "array"}
-                    separator={","}
-                    inputs={
-                      inputs.type == "array"
-                        ? { ...input, key: idx + "" }
-                        : { ...input }
-                    }
-                    template={inputs.template}
-                    // 부모의 availableTypes에 따라 자식의 타입을 제한
-                    availableTypes={inputs.availableTypes}
-                  />
-                </div>
-              );
-            })}
-            {currentInputs.length == 0 && isTypeArrayOrObject && (
-              <DynamicButton
-                type={availableTypes}
-                handleClickTypes={handleClickAddNewValueIn}
-                text="add new value"
-              />
-            )}
-          </details>
-        </div>
+            );
+          })}
+          {currentInputs.length == 0 && isTypeArrayOrObject && (
+            <DynamicButton
+              type={availableTypes}
+              handleClickTypes={handleClickAddNewValueIn}
+            />
+          )}
+        </details>
       )}
-
-      <DynamicButton
-        type={availableTypes}
-        handleClickTypes={handleClickAddNewValueOut}
-        text="click to add available types :"
-      />
+      <div className="flex ml-auto">
+        <button className="h-fit " id="" onClick={handleDeleteKey}>
+          ❌
+        </button>
+        <DynamicButton
+          type={availableTypes}
+          handleClickTypes={handleClickAddNewValueOut}
+        />
+      </div>
       {/* {afterInputs} */}
     </div>
   );
@@ -182,10 +179,20 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
   const [value, setValue] = useState<{
     [x: string]: string | number | boolean;
   }>({ 0: input.defaultValue ?? "" });
-  const handleDeleteKey: MouseEventHandler = (e) => {
-    if (!setter) return;
-    setter((prev) => [...deleteValueById(prev, input)]);
-  };
+  useEffect(() => {
+    if (sep == "" || !input?.defaultValue) return;
+    const newValue = input.defaultValue
+      .toString()
+      .split(sep)
+      .filter((v) => v != "");
+    setValue((prev) => Object(newValue));
+    setId((prev) =>
+      Array(newValue.length)
+        .fill(0)
+        .map((i, idx) => idx + "")
+    );
+  }, []);
+
   const handleClickDeleteText =
     (idx: string): MouseEventHandler =>
     () => {
@@ -262,70 +269,63 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
     return <FormatLog input={input} />;
   }
   return (
-    <div className="w-full" id={input.id} key={input.id}>
-      <details open>
-        <summary className="text">
-          <input
-            type="text"
-            value={key}
-            onChange={(e) => setKey(e.target.value)}
-            disabled={disabled}
-          />
-          <label className="flex">
-            separator:
-            <input
-              className="ml-0.5"
-              onChange={handleChangeSep}
-              value={sep}
-              placeholder="input separator"
-            />
-          </label>
-          <button onClick={handleDeleteKey} className="shrink-0 ml-auto">
-            ❌
-          </button>
-        </summary>
-        {/* 없는 id를 넣어서 가장 맨 앞에 추가 */}
+    <details open className="" id={input.id} key={input.id}>
+      <summary className="w-fit shrink">
+        <input
+          type="text"
+          value={key}
+          onChange={(e) => setKey(e.target.value)}
+          disabled={disabled}
+        />
+      </summary>
+      <label className="flex">
         {input.description && (
           <p className="font-normal text-sm">
             <span>✏️</span>
             {input.description}
           </p>
         )}
-        <button
-          className="block m-auto mr-0 w-fit"
-          onClick={handleClickAddSeparator("-1")}
-        >
-          ➕ ADD text
-        </button>
-        {id.map((i) => {
-          return (
-            <div key={i} className="w-full flex flex-wrap">
-              <div className="flex w-full mt-0.5 shrink-0">
-                <span className=" bg-slate-200 rounded-md py-0.5 px-2 mr-0.5">
-                  {!!sep ? sep : " "}
-                </span>
-                <textarea
-                  ref={textRef}
-                  id={i}
-                  className="block"
-                  value={(value[i] as string) ?? ""}
-                  onChange={handleChangeTextarea}
-                  placeholder={input.placeholder ?? "stardew valley"}
+      </label>
+
+      <button
+        className="block m-auto mr-0 w-fit"
+        onClick={handleClickAddSeparator("-1")}
+      >
+        ➕ ADD text
+      </button>
+      {id.map((i, idx) => {
+        return (
+          <div key={i} className="w-full flex flex-wrap">
+            <div className="flex w-full mt-0.5 shrink">
+              <span className=" bg-slate-200 rounded-md py-0.5 px-2 mr-0.5">
+                <input
+                  className="ml-0.5 ml-auto min-w-[1rem] w-[1.5rem] border-none h-full"
+                  onChange={handleChangeSep}
+                  value={sep}
+                  placeholder=" "
                 />
-              </div>
-              <button
-                onClick={handleClickDeleteText(i)}
-                className="bg-slate-200 ml-auto mr-0 group"
-                disabled={id.length == 1}
-              >
-                ✖️ DEL text
-              </button>
-              <button onClick={handleClickAddSeparator(i)}>➕ ADD text</button>
+              </span>
+              <textarea
+                ref={textRef}
+                id={i}
+                className="block"
+                value={(value[i] as string) ?? ""}
+                onChange={handleChangeTextarea}
+                placeholder={input.placeholder ?? "stardew valley"}
+              />
             </div>
-          );
-        })}
-      </details>
-    </div>
+            <button
+              onClick={handleClickDeleteText(i)}
+              className="bg-slate-200 ml-auto mr-0 group"
+              disabled={id.length == 1}
+            >
+              ✖️ DEL text
+            </button>
+            <button onClick={handleClickAddSeparator(i)}>➕ ADD text</button>
+          </div>
+        );
+      })}
+    </details>
   );
 };
 export default FormatValue;
@@ -357,24 +357,26 @@ const FormatNumber = ({ input }: { input: Input }) => {
   }, [value, key]);
 
   return (
-    <div className="w-full flex" id={input.id} key={input.id}>
-      <input
-        type="text"
-        className="shrink w-20"
-        value={key}
-        onChange={(e) => setKey(e.target.value)}
-      />
-      <span className="w-5 text-center">:</span>
+    <details className="number" id={input.id} key={input.id} open>
+      <summary>
+        <input
+          type="text"
+          className="shrink w-20"
+          value={key}
+          onChange={(e) => setKey(e.target.value)}
+        />
+      </summary>
+      <span className="w-5 text-center mx-2">:</span>
       <input
         type="number"
-        className="shrink-0 w-80"
+        className="inline"
         value={value ?? 0}
         onChange={handleChangeInput}
       />
-      <button onClick={handleDeleteKey} className="shrink-0 w-fit ml-auto">
+      {/* <button onClick={handleDeleteKey} className="shrink-0 w-fit ml-auto">
         ❌
-      </button>
-    </div>
+      </button> */}
+    </details>
   );
 };
 
@@ -403,32 +405,31 @@ const FormatCheckBox = ({ input }: { input: Input }) => {
     setter((prev) => [...updateValueById(prev, newValue)]);
   }, [value, key]);
   return (
-    <label className="w-full flex flex-wrap" key={input.id}>
-      <span className="a11y-hidden">{key}</span>
-      <input
-        className="w-80"
-        type="text"
-        value={key}
-        onChange={(e) => setKey(e.target.value)}
-      />
-      <label className="ml-1 flex">
+    <details className="checkbox" key={input.id}>
+      <summary>
+        <label htmlFor="checkbox" className="a11y-hidden">
+          {key}
+        </label>
+        <input
+          id="checkbox"
+          className="w-80"
+          type="text"
+          value={key}
+          onChange={(e) => setKey(e.target.value)}
+        />
+      </summary>
+      <label className="flex w-1/4 mx-auto mr-0">
         <input
           className="a11y-hidden"
           id={input.id}
           type="checkbox"
           checked={value}
-          value={`${value ?? ""}`}
+          value={`${value ?? "false"}`}
           onChange={handleCheckInput}
         />
-        <span className="shrink-0"></span>
-        <p className="ml-1 font-normal mr-auto w-5">
-          {value ? "true" : "false"}
-        </p>
+        <span className="font-normal"></span>
       </label>
-      <button onClick={handleDeleteKey} className="shrink-0 w-fit ml-auto">
-        ❌
-      </button>
-    </label>
+    </details>
   );
 };
 
@@ -455,16 +456,18 @@ const FormatLog = ({ input }: { input: Input }) => {
     ]);
   }, [value]);
   return (
-    <div className="w-full" id={input.id} key={input.id}>
-      <hgroup className="flex w-full log">
+    <details className="log" id={input.id} key={input.id}>
+      <summary className="">
         <h3 className="font-black	">
           LogName <span className="a11y-hidden">{value}</span>
         </h3>
-        <button onClick={handleDeleteKey} className="shrink-0 ml-auto">
+        {/* <button onClick={handleDeleteKey} className="shrink-0 ml-auto">
           ❌
-        </button>
-      </hgroup>
-      <p className="w-full font-normal text-sm">✏️{input.description}</p>
+        </button> */}
+      </summary>
+      {input.description && (
+        <p className="font-normal text-sm">✏️{input.description}</p>
+      )}
       <textarea
         ref={textRef}
         id={input.id}
@@ -473,6 +476,6 @@ const FormatLog = ({ input }: { input: Input }) => {
         onChange={handleChangeTextarea}
         placeholder={input.placeholder ?? "input Log Name"}
       />
-    </div>
+    </details>
   );
 };

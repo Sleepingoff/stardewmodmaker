@@ -88,6 +88,7 @@ function App() {
       <header className="main-header">
         <h1>Stardew Mod Maker</h1>
         <hgroup className="flex w-full overflow-auto">
+          <span className="my-auto mx-2 w-20">Files: </span>
           {tabs.map((tab, idx) => (
             <h2 key={idx}>
               <span className="a11y-hidden">{tab}</span>
@@ -106,10 +107,11 @@ function App() {
             onClick={handleClickNewTab}
             className="absolute ml-auto mr-0 inset-0 w-fit h-fit"
           >
-            +
+            + add new file
           </button>
         </hgroup>
         <section className="flex w-full overflow-auto">
+          <span className="my-auto mx-2 w-20">Templates: </span>
           {templates.map((temp, idx) => (
             <h3 key={idx + "temp"} className="w-fit my-2">
               <span className="a11y-hidden">{temp.fileName}</span>
@@ -128,7 +130,7 @@ function App() {
             onClick={handleClickNewTemp}
             className="absolute ml-auto mr-0 inset-0 w-fit h-fit"
           >
-            +
+            + add new template
           </button>
         </section>
       </header>
