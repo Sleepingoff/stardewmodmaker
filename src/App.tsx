@@ -12,6 +12,8 @@ import { Template, useTabStore } from "./store/tabStore";
 import { TemplateType } from "./type/template";
 import { useInputStore } from "./store/inputStore";
 import { GoX } from "react-icons/go";
+import ScrollSection from "./components/ScrollSection";
+import { BrowserRouter } from "react-router";
 
 const jsonFiles = ["Include"]; // 불러올 JSON 파일의 이름 목록
 
@@ -198,6 +200,7 @@ function App() {
             templates={templates}
             currentTab={activeTab}
           />
+          <ScrollSection />
           <JsonPreviewSection />
         </main>
       </MainContext.Provider>

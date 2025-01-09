@@ -42,8 +42,8 @@ const InputSection = ({
 
   return (
     <InputContext.Provider value={{ value: inputs, setter: setInputs }}>
-      <section className="w-fit shrink">
-        <main className="h-[80vh]	 overflow-auto flex relative">
+      <section className="w-fit shrink min-w-[50vw]">
+        <main className=" flex relative w-full">
           {currentTab.startsWith("template")
             ? templates.map((temp, idx) => {
                 return (
@@ -63,8 +63,6 @@ const InputSection = ({
                   else return <NewTab key={idx + "tab"} id={idx + ""} />;
                 }
               })}
-
-          <ScrollSection />
         </main>
       </section>
     </InputContext.Provider>

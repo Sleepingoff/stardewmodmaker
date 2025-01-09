@@ -23,10 +23,14 @@ import {
   GoFileDirectory,
   GoFileDirectoryFill,
   GoHeart,
+  GoHeartFill,
   GoNoEntry,
   GoPlusCircle,
   GoRepo,
 } from "react-icons/go";
+import { useScrollStore } from "../store/scrollStore";
+import { useTabStore } from "../store/tabStore";
+import { Route } from "react-router";
 
 interface FormatType {
   separator: string;
@@ -44,10 +48,13 @@ const FormatValue = ({
   availableTypes = ["log", "text", "number", "checkbox", "object", "array"],
   template = [],
 }: FormatType) => {
-  const { value, setter }: FormatContextValue = useContext(FormatContext);
+  const { setter }: FormatContextValue = useContext(FormatContext);
+  const { deleteScroll } = useScrollStore();
+  const { activeTab } = useTabStore();
   const handleDeleteKey: MouseEventHandler = (e) => {
     if (!setter) return;
     setter((prev) => [...deleteValueById(prev, inputs)]);
+    deleteScroll(activeTab, inputs.id);
   };
   const [currentInputs, setCurrentInputs] = useState<IdField[]>(inputs!.value);
 
@@ -186,6 +193,32 @@ const FormatValue = ({
 
 const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
   const { setter } = useContext(FormatContext);
+  const { setScroll, deleteScroll } = useScrollStore();
+  const { activeTab } = useTabStore();
+  //boolean heart state
+  const [heart, setHeart] = useState(false);
+  //type이 log인 경우, 현재 자신의 스크롤 위치를 기억
+  useEffect(() => {
+    if (!setter) return;
+    if (!input?.type) return;
+
+    if (!heart) {
+      deleteScroll(activeTab, input.id);
+    }
+
+    if (input.type == "log" || heart) {
+      const element = document.getElementById(input.id);
+      if (!element) return;
+      const elementPosition = element.getBoundingClientRect();
+      const elementTop = elementPosition.top + window.scrollY;
+      const viewportHeight = window.innerHeight * 0.8;
+
+      // 전체 윈도우 내부 높이에 대해 비례한 값
+      const ratioTop = (elementTop / viewportHeight) * 100;
+      setScroll(activeTab, input.id, ratioTop);
+    }
+  }, [heart]);
+
   const [key, setKey] = useState<string>(input.key);
   const [sep, setSep] = useState<string>(input.separator ?? "");
   const [id, setId] = useState<string[]>(["0"]);
@@ -206,6 +239,12 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
         .map((i, idx) => idx + "")
     );
   }, []);
+  const handleClickAddBookMark: MouseEventHandler = (e) => {
+    //summary click prevent
+    e.stopPropagation();
+    //하트 아이콘 모양 변경
+    setHeart((prev) => !prev);
+  };
 
   const handleClickDeleteText =
     (idx: string): MouseEventHandler =>
@@ -262,7 +301,7 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
       [target.id]: target.value,
     }));
   };
-  const handleClickAddBookMark: MouseEventHandler = (e) => {};
+
   const textRef = useRef(null);
 
   useEffect(() => {
@@ -284,9 +323,9 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
   }
   return (
     <details open className="" id={input.id} key={input.id}>
-      <summary className="w-fit shrink">
-        <button onClick={handleClickAddBookMark}>
-          <GoHeart />
+      <summary className="w-full shrink">
+        <button className="ml-0" onClick={handleClickAddBookMark}>
+          {heart ? <GoHeartFill color="pink" /> : <GoHeart />}
         </button>
         <input
           type="text"
@@ -357,6 +396,37 @@ export default FormatValue;
 
 const FormatNumber = ({ input }: { input: Input }) => {
   const { setter }: FormatContextValue = useContext(FormatContext);
+  const { setScroll, deleteScroll } = useScrollStore();
+  const { activeTab } = useTabStore();
+  //boolean heart state
+  const [heart, setHeart] = useState(false);
+  //type이 log인 경우, 현재 자신의 스크롤 위치를 기억
+  useEffect(() => {
+    if (!setter) return;
+    if (!input?.type) return;
+
+    if (!heart) {
+      deleteScroll(activeTab, input.id);
+    }
+
+    if (input.type == "log" || heart) {
+      const element = document.getElementById(input.id);
+      if (!element) return;
+      const elementPosition = element.getBoundingClientRect();
+      const elementTop = elementPosition.top + window.scrollY;
+      const viewportHeight = window.innerHeight * 0.8;
+
+      // 전체 윈도우 내부 높이에 대해 비례한 값
+      const ratioTop = (elementTop / viewportHeight) * 100;
+      setScroll(activeTab, input.id, ratioTop);
+    }
+  }, [heart]);
+  const handleClickAddBookMark: MouseEventHandler = (e) => {
+    //summary click prevent
+    e.stopPropagation();
+    //하트 아이콘 모양 변경
+    setHeart((prev) => !prev);
+  };
 
   const [key, setKey] = useState<string>(input.key);
   const [value, setValue] = useState<string>(input.defaultValue as string);
@@ -380,6 +450,9 @@ const FormatNumber = ({ input }: { input: Input }) => {
   return (
     <details className="number" id={input.id} key={input.id} open>
       <summary>
+        <button className="ml-0" onClick={handleClickAddBookMark}>
+          {heart ? <GoHeartFill color="pink" /> : <GoHeart />}
+        </button>
         <input
           type="text"
           className="shrink w-20"
@@ -400,6 +473,38 @@ const FormatNumber = ({ input }: { input: Input }) => {
 
 const FormatCheckBox = ({ input }: { input: Input }) => {
   const { setter }: FormatContextValue = useContext(FormatContext);
+  const { setScroll, deleteScroll } = useScrollStore();
+  const { activeTab } = useTabStore();
+  //boolean heart state
+  const [heart, setHeart] = useState(false);
+  //type이 log인 경우, 현재 자신의 스크롤 위치를 기억
+  useEffect(() => {
+    if (!setter) return;
+    if (!input?.type) return;
+
+    if (!heart) {
+      deleteScroll(activeTab, input.id);
+    }
+
+    if (input.type == "log" || heart) {
+      const element = document.getElementById(input.id);
+      if (!element) return;
+      const elementPosition = element.getBoundingClientRect();
+      const elementTop = elementPosition.top + window.scrollY;
+      const viewportHeight = window.innerHeight * 0.8;
+
+      // 전체 윈도우 내부 높이에 대해 비례한 값
+      const ratioTop = (elementTop / viewportHeight) * 100;
+      setScroll(activeTab, input.id, ratioTop);
+    }
+  }, [heart]);
+  const handleClickAddBookMark: MouseEventHandler = (e) => {
+    //summary click prevent
+    e.stopPropagation();
+    //하트 아이콘 모양 변경
+    setHeart((prev) => !prev);
+  };
+
   const [key, setKey] = useState<string>(input.key);
   const [value, setValue] = useState<boolean>(
     input.defaultValue == "true" ? true : false
@@ -424,6 +529,9 @@ const FormatCheckBox = ({ input }: { input: Input }) => {
         <label htmlFor="checkbox" className="a11y-hidden">
           {key}
         </label>
+        <button className="ml-0" onClick={handleClickAddBookMark}>
+          {heart ? <GoHeartFill color="pink" /> : <GoHeart />}
+        </button>
         <input
           id="checkbox"
           className="w-80"
@@ -450,10 +558,6 @@ const FormatCheckBox = ({ input }: { input: Input }) => {
 const FormatLog = ({ input }: { input: Input }) => {
   const { setter }: FormatContextValue = useContext(FormatContext);
   const [value, setValue] = useState<string>(input.defaultValue as string);
-  const handleDeleteKey: MouseEventHandler = (e) => {
-    if (!setter) return;
-    setter((prev) => [...deleteValueById(prev, input)]);
-  };
   const handleChangeTextarea: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     const target = e.target as HTMLTextAreaElement;
     setValue(target.value);

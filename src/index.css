@@ -388,11 +388,13 @@ div:hover>.bookmark::before {
 .bookmarker>button {
   border-radius: 0;
   position: relative;
-  background-color: #535bf2;
+  background-color: inherit;
   transition: .2s;
 }
 
+
 .bookmarker:hover>button {
+
   transform: rotate(45deg);
 }
 
