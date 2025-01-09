@@ -11,6 +11,7 @@ interface InputStore {
     updater: InputValue | ((prevState: InputValue) => InputValue)
   ) => void;
   initializeInputs: (keys: string[]) => void;
+  resetInputs: () => void;
 }
 
 export const useInputStore = create<InputStore>()(
@@ -36,6 +37,8 @@ export const useInputStore = create<InputStore>()(
           });
           return { inputs: newInputs };
         }),
+
+      resetInputs: () => set({ inputs: {} }),
     }),
     { name: "input-storage" }
   )

@@ -16,6 +16,8 @@ interface TabState {
     updater: (state: { templates: Template[] }) => Template[]
   ) => void;
   setActiveTab: (tab: string) => void;
+  resetStore: () => void;
+  initialStore: () => void;
 }
 
 export const useTabStore = create<TabState>()(
@@ -28,6 +30,8 @@ export const useTabStore = create<TabState>()(
       setTemplates: (updater) =>
         set((state) => ({ templates: updater(state) })),
       setActiveTab: (tab) => set({ activeTab: tab }),
+      resetStore: () => set({ tabs: [], templates: [], activeTab: "0" }),
+      initialStore: () => set({ tabs: ["manifest", "content"], templates: [] }),
     }),
     { name: "tab-storage" } // 로컬 스토리지 키 이름
   )

@@ -1,16 +1,17 @@
 import { v4 as uuidv4 } from "uuid"; // UUID를 생성하기 위한 패키지
 import { IdField, Input, Inputs } from "../type/types";
-
+let count = 0;
 const generateNewInput = (type: string, inputs: Input | Inputs): Input => {
+  count += Math.floor(Math.random() * 1000);
   const newId = uuidv4();
   if (Array.isArray(inputs)) {
     let newInputs: IdField = {
       id: newId,
-      key: "new Key" + newId,
+      key: "new Key" + count,
       value: [
         {
           id: uuidv4(),
-          key: "new Key in" + newId,
+          key: "new Key in" + count,
           value: [],
           type: "text",
           defaultValue: " ",
@@ -26,7 +27,7 @@ const generateNewInput = (type: string, inputs: Input | Inputs): Input => {
     if (type == "text") {
       newInputs = {
         id: newId,
-        key: "new Key" + newId,
+        key: "new Key" + count,
         value: [],
         type: type,
         defaultValue: " ",
@@ -53,11 +54,11 @@ const generateNewInput = (type: string, inputs: Input | Inputs): Input => {
 
   let newInputs: IdField = {
     id: newId,
-    key: "new Key" + newId,
+    key: "new Key" + count,
     value: [
       {
         id: uuidv4(),
-        key: "new Key in" + newId,
+        key: "new Key in" + count,
         value: [],
         type: "text",
         defaultValue: " ",
@@ -73,7 +74,7 @@ const generateNewInput = (type: string, inputs: Input | Inputs): Input => {
   if (type == "text") {
     newInputs = {
       id: newId,
-      key: "new Key" + newId,
+      key: "new Key" + count,
       value: [],
       type: type,
       defaultValue: " ",
@@ -88,6 +89,17 @@ const generateNewInput = (type: string, inputs: Input | Inputs): Input => {
       value: [],
       type: type,
       defaultValue: "new Log",
+      parentId: inputs.parentId,
+      template: [],
+    };
+  }
+  if (type == "checkbox") {
+    newInputs = {
+      id: newId,
+      key: "new Key" + count,
+      value: [],
+      type: type,
+      defaultValue: false,
       parentId: inputs.parentId,
       template: [],
     };

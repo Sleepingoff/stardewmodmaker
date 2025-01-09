@@ -148,18 +148,12 @@ const ManifestTab = () => {
 
   return (
     <section>
-      <div className="flex w-full text-center ">
-        <span className="m-auto shrink-0 min-w-[5vw]">key</span>|
-        <span className="mx-1 w-[5rem] ">separator</span>|
-        <span className="mx-auto t">value</span>|
-        <span className="m-auto shrink-0 min-w-[2vw]">delete</span>|
-        <span className="m-auto shrink-0 min-w-[2vw]">add</span>
-      </div>
       <FormatContext.Provider value={{ value: inputs, setter: setInputs }}>
-        <div className="w-[40vw] p-5 pl-0">
+        <div className="w-[40vw] p-5 pl-0 flex flex-col gap-2">
           <DynamicButton
             type={["text", "object", "array"]}
             handleClickTypes={handleClickTypes}
+            open={true}
           />
           {inputs.map((input) => (
             <FormatValue key={input.id} inputs={input} separator="," />

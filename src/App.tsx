@@ -10,12 +10,24 @@ import { MainContext } from "./hooks/context";
 import { Inputs } from "./type/types";
 import { Template, useTabStore } from "./store/tabStore";
 import { TemplateType } from "./type/template";
+import { useInputStore } from "./store/inputStore";
+import { GoX } from "react-icons/go";
 
 const jsonFiles = ["Include"]; // 불러올 JSON 파일의 이름 목록
 
 function App() {
-  const { tabs, templates, activeTab, setTabs, setTemplates, setActiveTab } =
-    useTabStore();
+  const {
+    tabs,
+    templates,
+    activeTab,
+    setTabs,
+    setTemplates,
+    setActiveTab,
+    resetStore,
+    initialStore,
+  } = useTabStore();
+
+  const { resetInputs } = useInputStore();
   const [inputs, setInputs] = useState<Inputs>([]);
 
   const handleClickNewTab: MouseEventHandler = () => {
@@ -30,6 +42,31 @@ function App() {
         content: { key: "LogName", value: [], type: "log", template: [] },
       },
     ]);
+  };
+  //handleClickRemoveAll mouse event handler
+
+  const handleClickRemoveAll: MouseEventHandler = () => {
+    //zustand store의 tabs와 templates를 초기화
+    localStorage.clear();
+    resetStore();
+    resetInputs();
+    setActiveTab("-1");
+    setInputs((prev) => []);
+  };
+
+  useEffect(() => {
+    initialStore();
+    setActiveTab("0");
+  }, []);
+
+  const handleClickRemoveFile: MouseEventHandler = (e) => {
+    const target = e.target as HTMLButtonElement;
+    if (!target) return;
+    const targetId = +target?.id;
+
+    if (targetId === 0) return;
+    setTabs([...tabs.slice(0, targetId), ...tabs.slice(targetId + 1)]);
+    setActiveTab("0");
   };
 
   const handleClickTab: MouseEventHandler = (e) => {
@@ -87,10 +124,16 @@ function App() {
     <>
       <header className="main-header">
         <h1>Stardew Mod Maker</h1>
+        <button
+          onClick={handleClickRemoveAll}
+          className="absolute ml-auto mr-0 inset-0 w-fit h-fit"
+        >
+          - reset all files
+        </button>
         <hgroup className="flex w-full overflow-auto">
           <span className="my-auto mx-2 w-20">Files: </span>
           {tabs.map((tab, idx) => (
-            <h2 key={idx}>
+            <h2 key={idx} className="relative w-fit my-2 group">
               <span className="a11y-hidden">{tab}</span>
               <button onClick={handleClickTab} id={idx + ""} className="p-0">
                 <input
@@ -101,6 +144,15 @@ function App() {
                   className="block w-full shrink py-2.5"
                 />
               </button>
+              {idx === 0 ? null : (
+                <button
+                  id={idx + ""}
+                  onClick={handleClickRemoveFile}
+                  className="hidden group-hover:block absolute z-10 right-1 top-0 bg-red-100 py-1"
+                >
+                  <GoX />
+                </button>
+              )}
             </h2>
           ))}
           <button
@@ -110,7 +162,7 @@ function App() {
             + add new file
           </button>
         </hgroup>
-        <section className="flex w-full overflow-auto">
+        <section className="flex w-full overflow-auto relative">
           <span className="my-auto mx-2 w-20">Templates: </span>
           {templates.map((temp, idx) => (
             <h3 key={idx + "temp"} className="w-fit my-2">

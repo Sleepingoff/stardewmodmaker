@@ -18,6 +18,15 @@ import { v4 as uuidv4 } from "uuid"; // UUID를 생성하기 위한 패키지
 import deleteValueById from "../utils/deleteValueById";
 import generateNewInput from "../utils/generateNewInput";
 import addUniqueId from "../utils/addUniqueId";
+import {
+  GoDuplicate,
+  GoFileDirectory,
+  GoFileDirectoryFill,
+  GoHeart,
+  GoNoEntry,
+  GoPlusCircle,
+  GoRepo,
+} from "react-icons/go";
 
 interface FormatType {
   separator: string;
@@ -127,7 +136,7 @@ const FormatValue = ({
           </summary>
           {inputs.description && (
             <p className="font-normal text-sm ml-1">
-              <span>✏️</span>
+              <GoRepo className="inline" />
               {inputs.description}
             </p>
           )}
@@ -156,14 +165,19 @@ const FormatValue = ({
           )}
         </details>
       )}
-      <div className="flex ml-auto">
-        <button className="h-fit " id="" onClick={handleDeleteKey}>
-          ❌
-        </button>
+      <div className="flex ml-auto h-fit">
         <DynamicButton
           type={availableTypes}
           handleClickTypes={handleClickAddNewValueOut}
         />
+        <button
+          className="h-fit bg-gray-100 mx-2 px-2"
+          id=""
+          onClick={handleDeleteKey}
+        >
+          <GoNoEntry color="red" className="inline" />{" "}
+          <span className="text-sm w-full">DEL</span>
+        </button>
       </div>
       {/* {afterInputs} */}
     </div>
@@ -248,7 +262,7 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
       [target.id]: target.value,
     }));
   };
-
+  const handleClickAddBookMark: MouseEventHandler = (e) => {};
   const textRef = useRef(null);
 
   useEffect(() => {
@@ -271,6 +285,9 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
   return (
     <details open className="" id={input.id} key={input.id}>
       <summary className="w-fit shrink">
+        <button onClick={handleClickAddBookMark}>
+          <GoHeart />
+        </button>
         <input
           type="text"
           value={key}
@@ -281,17 +298,18 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
       <label className="flex">
         {input.description && (
           <p className="font-normal text-sm">
-            <span>✏️</span>
+            <GoRepo className="inline" />
             {input.description}
           </p>
         )}
       </label>
 
       <button
-        className="block m-auto mr-0 w-fit"
+        className="block m-auto mr-0 w-fit bg-gray-100"
         onClick={handleClickAddSeparator("-1")}
       >
-        ➕ ADD text
+        <GoFileDirectoryFill className="inline" />{" "}
+        <span className="text-sm"> ADD TEXT</span>
       </button>
       {id.map((i, idx) => {
         return (
@@ -316,12 +334,19 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
             </div>
             <button
               onClick={handleClickDeleteText(i)}
-              className="bg-slate-200 ml-auto mr-0 group"
+              className="bg-gray-100 ml-auto mr-0 group"
               disabled={id.length == 1}
             >
-              ✖️ DEL text
+              <GoFileDirectory className="inline" />{" "}
+              <span className="text-sm"> DEL TEXT</span>
             </button>
-            <button onClick={handleClickAddSeparator(i)}>➕ ADD text</button>
+            <button
+              onClick={handleClickAddSeparator(i)}
+              className="bg-gray-100"
+            >
+              <GoFileDirectoryFill className="inline" />{" "}
+              <span className="text-sm"> ADD TEXT</span>
+            </button>
           </div>
         );
       })}
@@ -335,10 +360,6 @@ const FormatNumber = ({ input }: { input: Input }) => {
 
   const [key, setKey] = useState<string>(input.key);
   const [value, setValue] = useState<string>(input.defaultValue as string);
-  const handleDeleteKey: MouseEventHandler = (e) => {
-    if (!setter) return;
-    setter((prev) => [...deleteValueById(prev, input)]);
-  };
 
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
     const target = e.target as HTMLInputElement;
@@ -373,19 +394,12 @@ const FormatNumber = ({ input }: { input: Input }) => {
         value={value ?? 0}
         onChange={handleChangeInput}
       />
-      {/* <button onClick={handleDeleteKey} className="shrink-0 w-fit ml-auto">
-        ❌
-      </button> */}
     </details>
   );
 };
 
 const FormatCheckBox = ({ input }: { input: Input }) => {
   const { setter }: FormatContextValue = useContext(FormatContext);
-  const handleDeleteKey: MouseEventHandler = (e) => {
-    if (!setter) return;
-    setter((prev) => [...deleteValueById(prev, input)]);
-  };
   const [key, setKey] = useState<string>(input.key);
   const [value, setValue] = useState<boolean>(
     input.defaultValue == "true" ? true : false
@@ -405,7 +419,7 @@ const FormatCheckBox = ({ input }: { input: Input }) => {
     setter((prev) => [...updateValueById(prev, newValue)]);
   }, [value, key]);
   return (
-    <details className="checkbox" key={input.id}>
+    <details className="checkbox" key={input.id} open>
       <summary>
         <label htmlFor="checkbox" className="a11y-hidden">
           {key}
@@ -456,17 +470,17 @@ const FormatLog = ({ input }: { input: Input }) => {
     ]);
   }, [value]);
   return (
-    <details className="log" id={input.id} key={input.id}>
+    <details className="log" id={input.id} key={input.id} open>
       <summary className="">
         <h3 className="font-black	">
           LogName <span className="a11y-hidden">{value}</span>
         </h3>
-        {/* <button onClick={handleDeleteKey} className="shrink-0 ml-auto">
-          ❌
-        </button> */}
       </summary>
       {input.description && (
-        <p className="font-normal text-sm">✏️{input.description}</p>
+        <p className="font-normal text-sm">
+          <GoRepo className="inline" />
+          {input.description}
+        </p>
       )}
       <textarea
         ref={textRef}

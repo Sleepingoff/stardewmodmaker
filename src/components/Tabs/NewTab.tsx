@@ -37,7 +37,7 @@ const NewTab = ({ id }: NewTabType) => {
   return (
     <section key={id + "newTab"}>
       <FormatContext.Provider value={{ value: inputs, setter: setInputs }}>
-        <div className="w-[40vw] p-5 pl-0">
+        <div className="w-[40vw] p-5 pl-0 flex flex-col gap-2">
           <DynamicButton
             type={["text", "object", "array"]}
             handleClickTypes={handleClickTypes}

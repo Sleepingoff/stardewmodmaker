@@ -96,6 +96,7 @@ header {
 
 h1 {
   font-size: medium;
+  margin: .25rem;
 }
 
 hr {
@@ -160,7 +161,7 @@ label>input[type="checkbox"]:checked~span {
 }
 
 label>input[type="checkbox"]:checked~span::before {
-  content: "O";
+  content: "T";
   display: block;
   position: absolute;
   bottom: 50%;
@@ -170,7 +171,7 @@ label>input[type="checkbox"]:checked~span::before {
 }
 
 label>input[type="checkbox"]~span::before {
-  content: "X";
+  content: "F";
   position: absolute;
   bottom: 50%;
   right: 50%;
@@ -208,6 +209,12 @@ textarea:focus {
 textarea:focus::placeholder {
   color: #a3a6a8;
   font-weight: 400;
+}
+
+label.button-container {
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 2px 2px 5px 2px #8e8e8e5b;
 }
 
 @media (prefers-color-scheme: light) {
@@ -394,15 +401,15 @@ details.log {
   width: calc(100% - 4.5rem);
 }
 
-
+/* 
 .dynamic {
   margin-left: 0;
   margin-right: auto;
   margin-bottom: 1rem;
   width: fit-content;
   height: 100%;
-}
+} */
 
 .dynamic>button {
-  background-color: #646cff;
+  background-color: #dbdbdb;
 }
