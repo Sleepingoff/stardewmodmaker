@@ -4,15 +4,15 @@ import {
   useEffect,
   useState,
 } from "react";
-import InputSection from "./components/InputSection";
-import JsonPreviewSection from "./components/JsonSection";
+import InputSection from "./components/Section/InputSection";
+import JsonPreviewSection from "./components/Section/JsonSection";
 import { MainContext } from "./hooks/context";
 import { Inputs } from "./type/types";
 import { Template, useTabStore } from "./store/tabStore";
 import { TemplateType } from "./type/template";
 import { useInputStore } from "./store/inputStore";
 import { GoX } from "react-icons/go";
-import ScrollSection from "./components/ScrollSection";
+import ScrollSection from "./components/Section/ScrollSection";
 import { BrowserRouter } from "react-router";
 
 const jsonFiles = ["Include"]; // 불러올 JSON 파일의 이름 목록

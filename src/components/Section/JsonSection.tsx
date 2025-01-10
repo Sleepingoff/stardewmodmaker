@@ -1,8 +1,8 @@
 import { MouseEventHandler, useContext, useEffect, useState } from "react";
 import { PrismAsyncLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { MainContext } from "../hooks/context";
-import convertInputsToJson from "../utils/convertInputsToJson";
+import { MainContext } from "../../hooks/context";
+import convertInputsToJson from "../../utils/convertInputsToJson";
 import { GoDependabot } from "react-icons/go";
 
 const JsonPreviewSection = ({

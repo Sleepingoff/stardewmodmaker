@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { MainContext } from "../hooks/context";
-import { useScrollStore } from "../store/scrollStore";
-import { useTabStore } from "../store/tabStore";
+import { MainContext } from "../../hooks/context";
+import { useScrollStore } from "../../store/scrollStore";
+import { useTabStore } from "../../store/tabStore";
 import { GoHeartFill, GoPencil, GoSquareFill } from "react-icons/go";
 const findById = (data: any[], id: string): any | undefined => {
   for (const item of data) {
