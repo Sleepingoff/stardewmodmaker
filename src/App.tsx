@@ -125,7 +125,12 @@ function App() {
   return (
     <>
       <header className="main-header">
-        <h1>Stardew Mod Maker</h1>
+        <hgroup className="flex w-full">
+          <h1>Stardew Mod Maker</h1>
+          <p className="my-auto">
+            : Not connected to server. Data may be lost.
+          </p>
+        </hgroup>
         <button
           onClick={handleClickRemoveAll}
           className="absolute ml-auto mr-0 inset-0 w-fit h-fit"

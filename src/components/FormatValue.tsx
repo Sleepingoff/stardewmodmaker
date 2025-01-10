@@ -31,6 +31,7 @@ import {
 import { useScrollStore } from "../store/scrollStore";
 import { useTabStore } from "../store/tabStore";
 import { Route } from "react-router";
+import JsonPreview from "./JsonPreview";
 
 interface FormatType {
   separator: string;
@@ -49,12 +50,40 @@ const FormatValue = ({
   template = [],
 }: FormatType) => {
   const { setter }: FormatContextValue = useContext(FormatContext);
-  const { deleteScroll } = useScrollStore();
+  const { deleteScroll, setScroll } = useScrollStore();
   const { activeTab } = useTabStore();
+  let ratioTop = 0;
+  const [heart, setHeart] = useState(false);
+  //type이 log인 경우, 현재 자신의 스크롤 위치를 기억
+  useEffect(() => {
+    if (!setter) return;
+    if (!inputs?.type) return;
+    const element = document.getElementById(inputs.id);
+    if (!element) return;
+    const elementPosition = element.getBoundingClientRect();
+    const elementTop = elementPosition.top + window.scrollY;
+    const viewportHeight = window.innerHeight * 0.8;
+
+    // 전체 윈도우 내부 높이에 대해 비례한 값
+    ratioTop = (elementTop / viewportHeight) * 100;
+    if (!heart) {
+      deleteScroll(activeTab, ratioTop);
+    }
+
+    if (inputs.type == "log" || heart) {
+      setScroll(activeTab, ratioTop, inputs);
+    }
+  }, [heart]);
+  const handleClickAddBookMark: MouseEventHandler = (e) => {
+    //summary click prevent
+    e.stopPropagation();
+    //하트 아이콘 모양 변경
+    setHeart((prev) => !prev);
+  };
   const handleDeleteKey: MouseEventHandler = (e) => {
     if (!setter) return;
     setter((prev) => [...deleteValueById(prev, inputs)]);
-    deleteScroll(activeTab, inputs.id);
+    deleteScroll(activeTab, ratioTop);
   };
   const [currentInputs, setCurrentInputs] = useState<IdField[]>(inputs!.value);
 
@@ -133,6 +162,9 @@ const FormatValue = ({
         <details open>
           {/* {beforeInputs} */}
           <summary className={inputs.type}>
+            <button className="ml-0" onClick={handleClickAddBookMark}>
+              {heart ? <GoHeartFill color="pink" /> : <GoHeart />}
+            </button>
             <input
               type="text"
               value={key}
@@ -140,6 +172,7 @@ const FormatValue = ({
               onChange={(e) => setKey(e.target.value)}
               // className="max-w-[10vw]"
             />
+            {!disabled && <JsonPreview value={[inputs]} />}
           </summary>
           {inputs.description && (
             <p className="font-normal text-sm ml-1">
@@ -195,27 +228,27 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
   const { setter } = useContext(FormatContext);
   const { setScroll, deleteScroll } = useScrollStore();
   const { activeTab } = useTabStore();
+
   //boolean heart state
   const [heart, setHeart] = useState(false);
   //type이 log인 경우, 현재 자신의 스크롤 위치를 기억
   useEffect(() => {
     if (!setter) return;
     if (!input?.type) return;
+    const element = document.getElementById(input.id);
+    if (!element) return;
+    const elementPosition = element.getBoundingClientRect();
+    const elementTop = elementPosition.top + window.scrollY;
+    const viewportHeight = window.innerHeight * 0.8;
 
+    // 전체 윈도우 내부 높이에 대해 비례한 값
+    const ratioTop = (elementTop / viewportHeight) * 100;
     if (!heart) {
-      deleteScroll(activeTab, input.id);
+      deleteScroll(activeTab, ratioTop);
     }
 
     if (input.type == "log" || heart) {
-      const element = document.getElementById(input.id);
-      if (!element) return;
-      const elementPosition = element.getBoundingClientRect();
-      const elementTop = elementPosition.top + window.scrollY;
-      const viewportHeight = window.innerHeight * 0.8;
-
-      // 전체 윈도우 내부 높이에 대해 비례한 값
-      const ratioTop = (elementTop / viewportHeight) * 100;
-      setScroll(activeTab, input.id, ratioTop);
+      setScroll(activeTab, ratioTop, input);
     }
   }, [heart]);
 
@@ -322,7 +355,7 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
     return <FormatLog input={input} />;
   }
   return (
-    <details open className="" id={input.id} key={input.id}>
+    <details open id={input.id} key={input.id}>
       <summary className="w-full shrink">
         <button className="ml-0" onClick={handleClickAddBookMark}>
           {heart ? <GoHeartFill color="pink" /> : <GoHeart />}
@@ -333,6 +366,7 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
           onChange={(e) => setKey(e.target.value)}
           disabled={disabled}
         />
+        {!disabled && <JsonPreview value={[input]} />}
       </summary>
       <label className="flex">
         {input.description && (
@@ -365,7 +399,7 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
               <textarea
                 ref={textRef}
                 id={i}
-                className="block"
+                className="block w-full shrink"
                 value={(value[i] as string) ?? ""}
                 onChange={handleChangeTextarea}
                 placeholder={input.placeholder ?? "stardew valley"}
@@ -405,20 +439,20 @@ const FormatNumber = ({ input }: { input: Input }) => {
     if (!setter) return;
     if (!input?.type) return;
 
+    const element = document.getElementById(input.id);
+    if (!element) return;
+    const elementPosition = element.getBoundingClientRect();
+    const elementTop = elementPosition.top + window.scrollY;
+    const viewportHeight = window.innerHeight * 0.8;
+
+    // 전체 윈도우 내부 높이에 대해 비례한 값
+    const ratioTop = (elementTop / viewportHeight) * 100;
     if (!heart) {
-      deleteScroll(activeTab, input.id);
+      deleteScroll(activeTab, ratioTop);
     }
 
     if (input.type == "log" || heart) {
-      const element = document.getElementById(input.id);
-      if (!element) return;
-      const elementPosition = element.getBoundingClientRect();
-      const elementTop = elementPosition.top + window.scrollY;
-      const viewportHeight = window.innerHeight * 0.8;
-
-      // 전체 윈도우 내부 높이에 대해 비례한 값
-      const ratioTop = (elementTop / viewportHeight) * 100;
-      setScroll(activeTab, input.id, ratioTop);
+      setScroll(activeTab, ratioTop, input);
     }
   }, [heart]);
   const handleClickAddBookMark: MouseEventHandler = (e) => {
@@ -482,20 +516,20 @@ const FormatCheckBox = ({ input }: { input: Input }) => {
     if (!setter) return;
     if (!input?.type) return;
 
+    const element = document.getElementById(input.id);
+    if (!element) return;
+    const elementPosition = element.getBoundingClientRect();
+    const elementTop = elementPosition.top + window.scrollY;
+    const viewportHeight = window.innerHeight * 0.8;
+
+    // 전체 윈도우 내부 높이에 대해 비례한 값
+    const ratioTop = (elementTop / viewportHeight) * 100;
     if (!heart) {
-      deleteScroll(activeTab, input.id);
+      deleteScroll(activeTab, ratioTop);
     }
 
     if (input.type == "log" || heart) {
-      const element = document.getElementById(input.id);
-      if (!element) return;
-      const elementPosition = element.getBoundingClientRect();
-      const elementTop = elementPosition.top + window.scrollY;
-      const viewportHeight = window.innerHeight * 0.8;
-
-      // 전체 윈도우 내부 높이에 대해 비례한 값
-      const ratioTop = (elementTop / viewportHeight) * 100;
-      setScroll(activeTab, input.id, ratioTop);
+      setScroll(activeTab, ratioTop, input);
     }
   }, [heart]);
   const handleClickAddBookMark: MouseEventHandler = (e) => {

@@ -1,12 +1,13 @@
 //각 키의 스크롤 위치를 기억하는 스토어
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { Input } from "../type/types";
 
 //탭별로 스크롤 위치를 기억
 interface ScrollState {
-  scroll: { [key: string]: { [key: string]: number } };
-  setScroll: (tab: string, key: string, value: number) => void;
-  deleteScroll: (tab: string, key: string) => void;
+  scroll: { [key: string]: { [key: number]: Input } };
+  setScroll: (tab: string, key: number, value: Input) => void;
+  deleteScroll: (tab: string, key: number) => void;
   resetScroll: () => void;
 }
 
