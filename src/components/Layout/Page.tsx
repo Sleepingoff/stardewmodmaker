@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Footer from "./Footer";
 import Header from "./Header";
 
@@ -7,10 +8,10 @@ interface PageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const PageLayout = ({ children, ...props }: PageLayoutProps) => {
   return (
-    <main {...props}>
-      <Header />
-      {children}
-      <Footer />
+    <main className="flex flex-wrap	gap-4" {...props}>
+      <Header className="grow-0 basis-60 sticky top-2 h-[50vh] m-2 over z-10" />
+      <main className="grow">{children}</main>
+      <Footer className="grow-0 basis-60 sticky bottom-2 h-fit m-2 over" />
     </main>
   );
 };

@@ -120,7 +120,7 @@
                                 "value": [],
                                 "defaultValue": "Log Name",
                                 "type": "log",
-                                "description": "중복된 LogName이 있을 경우 첫번째 LogName만 json에 표시됩니다."
+                                "description": "content1"
                             },
                             {
                                 "key": "Action",
@@ -167,7 +167,7 @@
                                 "type": "text",
                                 "defaultValue": "assets",
                                 "separator": "/",
-                                "tooltipForAdditionalExplanation": "자신의 모드 하위 파일 경로를 입력해주세요. 상위 폴더로 가는 행위는 게임에서 허락하지 않습니다."
+                                "description": "content2"
                             },
                             {
                                 "key": "FromArea",
@@ -199,7 +199,7 @@
                                     }
                                 ],
                                 "requireAllKeys": true,
-                                "tooltipForAdditionalExplanation": "모드의 이미지 중 반영하고 싶은 부분. pixel 단위. ToArea와 width, height가 같아야 합니다."
+                                "description": "content3"
                             },
                             {
                                 "key": "ToArea",
@@ -230,7 +230,7 @@
                                         "defaultValue": 0
                                     }
                                 ],
-                                "tooltipForAdditionalExplanation": "게임의 이미지 중 변경하고 싶은 부분. pixel 단위. FromArea와 width, height가 같아야 합니다."
+                                "description": "content3"
                             },
                             {
                                 "key": "When",
@@ -241,7 +241,7 @@
                                         "type": "text",
                                         "value": [],
                                         "defaultValue": "CustomConfigKey",
-                                        "tooltipForAdditionalExplanation": "너무 많아서 천천히 추가... 정보: https://github.com/Pathoschild/StardewMods/blob/develop/ContentPatcher/docs/author-guide/tokens.md#global-tokens"
+                                        "description": "content4"
                                     }
                                 ],
                                 "availableMultipleKey": true
@@ -257,21 +257,21 @@
                                         "value": [],
                                         "type": "text",
                                         "defaultValue": "",
-                                        "placeholder": "증가일 경우 + 10, 감소일 경우 -10 등으로 표현"
+                                        "description": "content5"
                                     },
                                     {
                                         "key": "Default",
                                         "value": [],
                                         "type": "text",
                                         "defaultValue": "",
-                                        "placeholder": "증가일 경우 + 10, 감소일 경우 -10 등으로 표현"
+                                        "description": "content5"
                                     },
                                     {
                                         "key": "Late",
                                         "value": [],
                                         "type": "text",
                                         "defaultValue": "",
-                                        "placeholder": "증가일 경우 + 10, 감소일 경우 -10 등으로 표현"
+                                        "description": "content5"
                                     }
                                 ]
                             },

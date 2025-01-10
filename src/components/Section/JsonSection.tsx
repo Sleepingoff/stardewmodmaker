@@ -39,7 +39,7 @@ const JsonPreviewSection = ({
         <span className="text-l">{open ? "CLOSE" : "OPEN"}</span>
       </button>
       {open && (
-        <main className="over fixed top-[70vh] right-[10%] w-[60vw] overflow-auto h-[50vh]">
+        <main className="over fixed top-[30vh] right-[10%] w-[60vw] overflow-auto h-[50vh]">
           <button className="absolute right-2 top-5" onClick={handleClickCopy}>
             {copy ? "copied!" : "copy"}
           </button>

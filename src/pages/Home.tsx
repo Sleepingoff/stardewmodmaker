@@ -1,10 +1,17 @@
+import {
+  ChangeEventHandler,
+  MouseEventHandler,
+  useEffect,
+  useState,
+} from "react";
 import PageLayout from "../components/Layout/Page";
-
+import { useGlobalStore } from "../store/globalStore";
 const Home = () => {
+  //global state
+  const { Languages } = useGlobalStore();
   return (
     <PageLayout>
-      <h1>Home</h1>
-      <p>Welcome to the home page!</p>
+      <main></main>
     </PageLayout>
   );
 };

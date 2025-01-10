@@ -32,6 +32,8 @@ import { useScrollStore } from "../store/scrollStore";
 import { useTabStore } from "../store/tabStore";
 import { Route } from "react-router";
 import JsonPreview from "./JsonPreview";
+import { useGlobalStore } from "../store/globalStore";
+import Descriptions from "../assets/descriptions.json";
 
 interface FormatType {
   separator: string;
@@ -50,6 +52,16 @@ const FormatValue = ({
   template = [],
 }: FormatType) => {
   const { setter }: FormatContextValue = useContext(FormatContext);
+
+  const { Languages } = useGlobalStore();
+  const contents = Descriptions[Languages];
+  const [description, setDescription] =
+    useState<Partial<Record<keyof typeof contents, string>>>();
+
+  useEffect(() => {
+    setDescription(Descriptions[Languages]);
+  }, [Languages]);
+
   const { deleteScroll, setScroll } = useScrollStore();
   const { activeTab } = useTabStore();
   let ratioTop = 0;
@@ -177,7 +189,9 @@ const FormatValue = ({
           {inputs.description && (
             <p className="font-normal text-sm ml-1">
               <GoRepo className="inline" />
-              {inputs.description}
+              {(description &&
+                description[inputs.description as keyof typeof description]) ??
+                inputs.description}
             </p>
           )}
           {currentInputs.map((input, idx) => {
@@ -226,6 +240,16 @@ const FormatValue = ({
 
 const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
   const { setter } = useContext(FormatContext);
+
+  const { Languages } = useGlobalStore();
+  const contents = Descriptions[Languages];
+  const [description, setDescription] =
+    useState<Partial<Record<keyof typeof contents, string>>>(contents);
+
+  useEffect(() => {
+    setDescription(contents);
+  }, [Languages]);
+
   const { setScroll, deleteScroll } = useScrollStore();
   const { activeTab } = useTabStore();
 
@@ -372,7 +396,10 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
         {input.description && (
           <p className="font-normal text-sm">
             <GoRepo className="inline" />
-            {input.description}
+
+            {(description &&
+              description[input.description as keyof typeof description]) ??
+              input.description}
           </p>
         )}
       </label>
@@ -591,6 +618,16 @@ const FormatCheckBox = ({ input }: { input: Input }) => {
 
 const FormatLog = ({ input }: { input: Input }) => {
   const { setter }: FormatContextValue = useContext(FormatContext);
+
+  const { Languages } = useGlobalStore();
+  const contents = Descriptions[Languages];
+  const [description, setDescription] =
+    useState<Partial<Record<keyof typeof contents, string>>>();
+
+  useEffect(() => {
+    setDescription(Descriptions[Languages]);
+  }, [Languages]);
+
   const [value, setValue] = useState<string>(input.defaultValue as string);
   const handleChangeTextarea: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     const target = e.target as HTMLTextAreaElement;
@@ -617,7 +654,9 @@ const FormatLog = ({ input }: { input: Input }) => {
       {input.description && (
         <p className="font-normal text-sm">
           <GoRepo className="inline" />
-          {input.description}
+          {(description &&
+            description[input.description as keyof typeof description]) ??
+            input.description}
         </p>
       )}
       <textarea

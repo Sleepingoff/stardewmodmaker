@@ -16,7 +16,7 @@
                 "type": "text",
                 "defaultValue": "Your Mod Name",
                 "placeholder": "모드 이름을 입력해주세요",
-                "description": "모드 이름을 설정하는 필수 필드입니다."
+                "description": "manifest1"
             },
             {
                 "key": "Author",
@@ -24,7 +24,7 @@
                 "type": "text",
                 "defaultValue": "Your Name",
                 "placeholder": "당신의 이름을 입력해주세요",
-                "description": "모드 작성자의 이름을 설정합니다."
+                "description": "manifest2"
             },
             {
                 "key": "Version",
@@ -32,7 +32,7 @@
                 "type": "text",
                 "defaultValue": "Your Mod Version",
                 "placeholder": "0.0.0",
-                "description": "모드 버전을 설정합니다."
+                "description": "manifest3"
             },
             {
                 "key": "Description",
@@ -40,7 +40,7 @@
                 "type": "text",
                 "defaultValue": "Your Mod Description",
                 "placeholder": "모드의 설명을 입력해주세요",
-                "description": "모드의 객관적인 설명을 안내합니다."
+                "description": "manifest4"
             },
             {
                 "key": "UniqueID",
@@ -48,7 +48,7 @@
                 "type": "text",
                 "defaultValue": "Author.UniqueID",
                 "placeholder": "모드의 특별한 ID를 만들어주세요. 기본적으로 당신의 이름이 필요합니다.",
-                "description": "소유자의 특별한 ID를 설정합니다."
+                "description": "manifest5"
             },
             {
                 "key": "UpdateKeys",
@@ -65,7 +65,7 @@
                         "placeholder": "모드의 업데이트를 출처할 수 있는 키를 입력해주세요. ex) Nexus:000"
                     }
                 ],
-                "description": "업데이트할 모드의 키를 안내합니다.",
+                "description": "manifest6",
                 "tooltipForAdditionalExplanation": "네퍼스의 경우, 모드 URL의 가장 마지막 숫자가 업데이트 키가 됩니다."
             },
             {
@@ -82,12 +82,12 @@
                         "defaultValue": "Pathoschild.ContentPatcher"
                     }
                 ],
-                "description": "컨텐츠 팩일 경우 해당값을 설정합니다."
+                "description": "manifest7"
             },
             {
                 "key": "Dependencies",
                 "type": "array",
-                "description": "연관된 모드를 설정합니다.",
+                "description": "manifest8",
                 "availableTypes": [
                     "object"
                 ],

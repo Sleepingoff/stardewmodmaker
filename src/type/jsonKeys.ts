@@ -1,9 +1,7 @@
 type defaultValueType = string | number | [] | object | boolean;
 type JsonType = "text" | "number" | "array" | "object" | "boolean";
 
-export interface Languages {
-  "ko-KR": any;
-}
+export type Languages = "ko-KR" | "en-US";
 
 interface JsonKeys {
   //필수로 입력해야할 키값들.

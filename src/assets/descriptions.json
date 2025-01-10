@@ -1,0 +1,40 @@
+{
+    "ko-KR": {
+        "intro1": "안녕하세요! 스타듀 밸리 모드를 편하게 만들기 위해 개발 중인 사이트입니다.",
+        "intro2": "이 사이트는 스타듀 밸리 모드를 만들기 위한 도구들을 제공합니다.",
+        "warn-server": "서버와 연결하지 않았습니다. 데이터를 잃을 수 있으니, 틈틈히 복사해서 별도로 저장하는 걸 추천합니다.",
+        "header": "모드 템플릿 제작 중...",
+        "manifest1": "모드 이름을 설정하는 필수 필드입니다.",
+        "manifest2": "모드 제작자의 이름을 설정하는 필수 필드입니다.",
+        "manifest3": "모드 버전을 설정합니다.",
+        "manifest4": "모드의 설명을 설정합니다.",
+        "manifest5": "모드의 고유 ID를 설정합니다. 제작자의 이름을 포함하는 것이 좋습니다.",
+        "manifest6": "모드 업데이트를 확인할 키를 설정합니다.",
+        "manifest7": "컨텐츠 팩일 경우 해당값을 설정합니다.",
+        "manifest8": "연관된 모드를 설정합니다.",
+        "content1": "중복된 LogName이 있을 경우 첫번째 LogName만 json에 표시됩니다.",
+        "content2": "자신의 모드 하위 파일 경로를 입력해주세요. 상위 폴더로 가는 행위는 게임에서 허락하지 않습니다.",
+        "content3": "모드의 이미지 중 반영하고 싶은 부분. pixel 단위. ToArea와 width, height가 같아야 합니다.",
+        "content4": "너무 많아서 천천히 추가... 정보: https://github.com/Pathoschild/StardewMods/blob/develop/ContentPatcher/docs/author-guide/tokens.md#global-tokens",
+        "content5": "증가일 경우 + 10, 감소일 경우 -10 등으로 표현"
+    },
+    "en-US": {
+        "intro1": "Hello! This site is under development to make Stardew Valley mods easier.",
+        "intro2": "This site provides tools for creating Stardew Valley mods.",
+        "warn-server": "Not connected to the server. It is recommended to copy and save the data separately as you may lose the data.",
+        "header": "Creating mode template...",
+        "manifest1": "This is a required field for setting the mod name.",
+        "manifest2": "This is a required field for setting the mod creator's name.",
+        "manifest3": "Set the mod version.",
+        "manifest4": "Set the description of the mod.",
+        "manifest5": "Set the unique ID of the mod. It is recommended to include the creator's name.",
+        "manifest6": "Set the key to check for mod updates.",
+        "manifest7": "Set the value if it is a content pack.",
+        "manifest8": "Set the associated mod.",
+        "content1": "If there are duplicate LogNames, only the first LogName will be displayed in the json.",
+        "content2": "Please enter the sub-file path of your mod. Going to the parent folder is not allowed in the game.",
+        "content3": "Part of the mod image to be reflected. pixel unit. ToArea and width, height must be the same.",
+        "content4": "Too many to add slowly... Information: https://github.com/Pathoschild/StardewMods/blob/develop/ContentPatcher/docs/author-guide/tokens.md#global-tokens",
+        "content5": "If it increases, it is expressed as + 10, and if it decreases, it is expressed as -10."
+    }
+}
