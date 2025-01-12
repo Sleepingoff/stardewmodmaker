@@ -42,8 +42,8 @@ const InputSection = ({
 
   return (
     <InputContext.Provider value={{ value: inputs, setter: setInputs }}>
-      <section className="w-fit shrink min-w-[50vw] mx-2">
-        <main className=" flex relative w-full">
+      <section className=" w-[60%]  mx-2">
+        <main className="relative">
           {currentTab.startsWith("template")
             ? templates.map((temp, idx) => {
                 return (

@@ -25,7 +25,6 @@
 
 
 #root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -38,6 +37,7 @@
   margin: 0 auto;
 
 }
+
 
 a {
   font-weight: 500;
@@ -371,7 +371,7 @@ summary>.preview {
 details:hover>summary>.preview {
   display: block;
   z-index: 99;
-  left: 45vw;
+  left: 100%;
   top: 50%;
   max-width: 40vw;
   transform: translateY(-50%);

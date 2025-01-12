@@ -187,7 +187,7 @@ const FormatValue = ({
             {!disabled && <JsonPreview value={[inputs]} />}
           </summary>
           {inputs.description && (
-            <p className="font-normal text-sm ml-1">
+            <p className="font-normal text-sm ml-1 text-wrap w-full">
               <GoRepo className="inline" />
               {(description &&
                 description[inputs.description as keyof typeof description]) ??
@@ -394,7 +394,7 @@ const Format = ({ input, disabled }: { input: Input; disabled?: boolean }) => {
       </summary>
       <label className="flex">
         {input.description && (
-          <p className="font-normal text-sm">
+          <p className="font-normal text-sm text-wrap w-full">
             <GoRepo className="inline" />
 
             {(description &&
@@ -652,7 +652,7 @@ const FormatLog = ({ input }: { input: Input }) => {
         </h3>
       </summary>
       {input.description && (
-        <p className="font-normal text-sm">
+        <p className="font-normal text-sm text-wrap w-full">
           <GoRepo className="inline" />
           {(description &&
             description[input.description as keyof typeof description]) ??

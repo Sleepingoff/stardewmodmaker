@@ -22,7 +22,7 @@ const Header = ({ ...props }: HeaderProps) => {
   return (
     <header {...props}>
       <h1 className="h-fit text-center">Stardew Canvas</h1>
-      <nav className="w-fit ml-auto text-right">
+      <nav className="w-full ml-auto text-right">
         <Link to={`/`}>Home</Link>
         <ul>
           {menu.map((item) => (

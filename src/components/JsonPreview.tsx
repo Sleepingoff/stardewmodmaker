@@ -21,7 +21,7 @@ const JsonPreview = ({ value }: { value: Inputs }) => {
     }, 3000);
   }, [copy]);
   return (
-    <section className="w-[30vw] shrink absolute z-10 preview over">
+    <section className="w-[100%] shrink absolute preview over">
       <button className="absolute right-2 top-5" onClick={handleClickCopy}>
         {copy ? "copied!" : "copy"}
       </button>

@@ -132,7 +132,7 @@ const ContentPatcher = () => {
   }, [Languages]);
   return (
     <PageLayout>
-      <header className="main-header">
+      <header className="">
         <hgroup className="w-fit">
           <h1>Content Patcher</h1>
           <p className="w-full my-auto text-wrap">

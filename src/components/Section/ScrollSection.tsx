@@ -30,7 +30,7 @@ const ScrollSection = () => {
   };
 
   return (
-    <nav className="w-[4rem] bg-gray-100 shrink-0 sticky top-0 h-[100vh]">
+    <nav className="w-[4rem] bg-gray-100 shrink-0 sticky ml-10 top-0 h-[100vh]">
       <div className="p-2">
         {/* 현재 탭의 스크롤 데이터만 탐색 */}
         {Object.entries(scroll[activeTab] ?? {}).map(([position, input]) => {
