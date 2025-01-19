@@ -1,23 +1,11 @@
-import {
-  ChangeEventHandler,
-  MouseEventHandler,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import ManifestTab from "../Tabs/ManifestTab";
+import { useContext, useEffect } from "react";
 import { InputContext, MainContext } from "../../hooks/context";
-import { InputValue } from "../../type/context";
-import ContentTab from "../Tabs/ContentTab";
-import NewTab from "../Tabs/NewTab";
+import ContentTab from "../ContentTab";
 import { Inputs } from "../../type/types";
-import ScrollSection from "./ScrollSection";
-import TempTab from "../Tabs/TempTab";
 import { useInputStore } from "../../store/inputStore";
 
 const InputSection = ({
   tabs,
-  templates,
   currentTab,
 }: {
   tabs: string[];
@@ -44,25 +32,11 @@ const InputSection = ({
     <InputContext.Provider value={{ value: inputs, setter: setInputs }}>
       <section className=" w-[60%]  mx-2">
         <main className="relative">
-          {currentTab.startsWith("template")
-            ? templates.map((temp, idx) => {
-                return (
-                  currentTab == "template" + idx && (
-                    <TempTab
-                      id={"template" + idx}
-                      key={"template" + idx}
-                      temp={temp}
-                    />
-                  )
-                );
-              })
-            : tabs.map((tabName, idx) => {
-                if (currentTab == idx + "") {
-                  if (idx == 0) return <ManifestTab key={idx + "tab"} />;
-                  else if (idx == 1) return <ContentTab key={idx + "tab"} />;
-                  else return <NewTab key={idx + "tab"} id={idx + ""} />;
-                }
-              })}
+          {tabs.map((tabName, idx) => {
+            if (currentTab == idx + "") {
+              return <ContentTab key={tabName + "tab"} />;
+            }
+          })}
         </main>
       </section>
     </InputContext.Provider>

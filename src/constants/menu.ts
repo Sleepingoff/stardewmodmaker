@@ -1,1 +1,1 @@
-export const menu = ["ContentPatcher", "FarmerMotion"];
+export const menu = [{ id: "ContentPatcher", route: "ContentPatcher" }];

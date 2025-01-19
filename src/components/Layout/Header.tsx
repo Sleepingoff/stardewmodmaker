@@ -26,8 +26,8 @@ const Header = ({ ...props }: HeaderProps) => {
         <Link to={`/`}>Home</Link>
         <ul>
           {menu.map((item) => (
-            <li key={item}>
-              <Link to={`/${item}`}>{item}</Link>
+            <li key={item.id + "menu"}>
+              <Link to={`/${item.route}`}>{item.route}</Link>
             </li>
           ))}
         </ul>

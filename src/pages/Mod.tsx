@@ -5,19 +5,20 @@ import {
   useState,
 } from "react";
 import { GoX } from "react-icons/go";
-import { Template, useTabStore } from "../../store/tabStore";
-import { useInputStore } from "../../store/inputStore";
-import { Inputs } from "../../type/types";
-import { MainContext } from "../../hooks/context";
-import PageLayout from "../../components/Layout/Page";
-import InputSection from "../../components/Section/InputSection";
-import JsonPreviewSection from "../../components/Section/JsonSection";
-import ScrollSection from "../../components/Section/ScrollSection";
-import { useGlobalStore } from "../../store/globalStore";
-import Descriptions from "../../assets/descriptions.json";
+import { Template, useTabStore } from "../store/tabStore";
+import { useInputStore } from "../store/inputStore";
+import { Inputs } from "../type/types";
+import { MainContext } from "../hooks/context";
+import PageLayout from "../components/Layout/Page";
+import InputSection from "../components/Section/InputSection";
+import JsonPreviewSection from "../components/Section/JsonSection";
+import ScrollSection from "../components/Section/ScrollSection";
+import { useGlobalStore } from "../store/globalStore";
+import Descriptions from "../assets/descriptions.json";
+import { Link, useLocation } from "react-router";
 
 const jsonFiles = ["Include"]; // 불러올 JSON 파일의 이름 목록
-const ContentPatcher = () => {
+const Mod = () => {
   const {
     tabs,
     templates,
@@ -130,6 +131,8 @@ const ContentPatcher = () => {
   useEffect(() => {
     setDescription(Descriptions[Languages]);
   }, [Languages]);
+
+  const { pathname } = useLocation();
   return (
     <PageLayout>
       <header className="">
@@ -148,7 +151,7 @@ const ContentPatcher = () => {
         <hgroup className="flex w-full overflow-auto">
           <span className="my-auto mx-2 w-20">Files: </span>
           {tabs.map((tab, idx) => (
-            <h2 key={idx} className="relative w-fit my-2 group">
+            <h2 className="relative w-fit my-2 group" key={tab}>
               <span className="a11y-hidden">{tab}</span>
               <button onClick={handleClickTab} id={idx + ""} className="p-0">
                 <input
@@ -221,4 +224,4 @@ const ContentPatcher = () => {
   );
 };
 
-export default ContentPatcher;
+export default Mod;
