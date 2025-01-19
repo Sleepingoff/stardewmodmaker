@@ -15,7 +15,7 @@ interface TabState {
   setTemplates: (
     updater: (state: { templates: Template[] }) => Template[]
   ) => void;
-  setActiveTab: (tab: string) => void;
+  setActiveTab: (id: string) => void;
   resetStore: () => void;
   initialStore: () => void;
 }
@@ -29,7 +29,7 @@ export const useTabStore = create<TabState>()(
       setTabs: (tabs) => set({ tabs }),
       setTemplates: (updater) =>
         set((state) => ({ templates: updater(state) })),
-      setActiveTab: (tab) => set({ activeTab: tab }),
+      setActiveTab: (id) => set({ activeTab: id }),
       resetStore: () => set({ tabs: [], templates: [], activeTab: "0" }),
       initialStore: () => set({ tabs: ["manifest", "content"], templates: [] }),
     }),

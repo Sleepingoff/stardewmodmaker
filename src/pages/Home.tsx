@@ -27,7 +27,7 @@ const Home = () => {
           <p>{description?.intro2}</p>
         </hgroup>
       </header>
-      <main></main>
+      <main className="w-full"></main>
     </PageLayout>
   );
 };

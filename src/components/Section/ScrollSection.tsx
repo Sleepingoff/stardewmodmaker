@@ -3,15 +3,13 @@ import { MainContext } from "../../hooks/context";
 import { useScrollStore } from "../../store/scrollStore";
 import { useTabStore } from "../../store/tabStore";
 import { GoHeartFill, GoPencil, GoSquareFill } from "react-icons/go";
-const findById = (data: any[], id: string): any | undefined => {
+import { IdField, Inputs } from "../../type/types";
+const findById = (data: Inputs, id: string): IdField | undefined => {
+  if (!data?.length) return;
   for (const item of data) {
     if (item?.id === id) {
-      console.log(item);
       return item; // 현재 객체에서 id를 찾음
-    }
-
-    // 중첩된 객체가 배열이라면 재귀 탐색
-    if (item.value.length > 0) {
+    } else {
       return findById(item.value, id);
     }
   }
@@ -34,7 +32,6 @@ const ScrollSection = () => {
       <div className="p-2">
         {/* 현재 탭의 스크롤 데이터만 탐색 */}
         {Object.entries(scroll[activeTab] ?? {}).map(([position, input]) => {
-          console.log(position);
           const foundItem = findById(value, input.id); // 재귀적으로 id 탐색
 
           return (

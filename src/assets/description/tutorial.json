@@ -1,0 +1,28 @@
+{
+    "ko-KR": {
+        "step0": "튜토리얼을 시작할까요?",
+        "step1": "메뉴에서 사용하는 모드를 선택합니다. ContentPatcher 메뉴를 클릭해주세요.",
+        "step2": "ContentPatcher를 사용하기 위한 기본 파일들입니다. manifest.json은 필수파일로 삭제되지 않습니다.",
+        "step3": "기존 모드에서 일부 코드만 추가한다면, Template를 사용할 수도 있습니다.",
+        "step4": "원하는 파일명으로 수정할 수 있습니다. 아직 파일로 저장하는 기능은 없습니다.",
+        "step5": "새로운 키를 자유롭게 추가할 수 있습니다.",
+        "step6": "여기에 입력한 문자로 내부의 텍스트를 분리할 수 있습니다. 예를 들어, 이벤트를 만들 땐 `/`를 기준으로 작성할 수 있습니다.",
+        "step7": "마우스를 올리면 현재 어떤 내용을 입력하고 있는지 볼 수 있고, copy버튼으로 복사도 할 수 있습니다.",
+        "step8": "OPEN을 클릭하여 전체 내용을 확인하고, 복사할 수 있습니다.",
+        "step9": "각 키 앞에 하트를 누르면 오른쪽 라인에 하트가 생깁니다.",
+        "step10": "하트를 클릭하면 해당 키로 바로 스크롤합니다."
+    },
+    "en-US": {
+        "step0": "Shall we start the tutorial?",
+        "step1": "Select the mod you are using from the menu. Click on the ContentPatcher menu.",
+        "step2": "These are the basic files for using ContentPatcher. The manifest.json file is required and cannot be deleted.",
+        "step3": "If you are only adding some code from an existing mod, you can also use a Template.",
+        "step4": "You can rename it to the desired filename. The file-saving feature is not yet available.",
+        "step5": "You can freely add new keys.",
+        "step6": "You can separate internal text with the character entered here. For example, you can use `/` as a separator when creating events.",
+        "step7": "Hovering over the mouse lets you see the current input content, and you can also copy it using the copy button.",
+        "step8": "Click OPEN to see and copy all content.",
+        "step9": "Click the heart in front of each key to make a heart appear on the right line.",
+        "step10": "Clicking the heart will scroll directly to that key."
+    }
+}

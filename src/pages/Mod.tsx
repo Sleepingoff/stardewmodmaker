@@ -29,7 +29,7 @@ const Mod = () => {
     resetStore,
     initialStore,
   } = useTabStore();
-
+  const { pathname } = useLocation();
   const { resetInputs } = useInputStore();
   const [inputs, setInputs] = useState<Inputs>([]);
 
@@ -103,7 +103,7 @@ const Mod = () => {
   useEffect(() => {
     // JSON 파일 불러오기
     jsonFiles.map((file) => {
-      import(`../../assets/template/temp.${file}.json`)
+      import(`../../assets${pathname}/template/temp.${file}.json`)
         .then((res) => res.default as Record<string, any>) // 명시적으로 타입 설정
         .then((res) => {
           setTemplates((state) => {
@@ -132,7 +132,6 @@ const Mod = () => {
     setDescription(Descriptions[Languages]);
   }, [Languages]);
 
-  const { pathname } = useLocation();
   return (
     <PageLayout>
       <header className="">
@@ -211,11 +210,7 @@ const Mod = () => {
         }}
       >
         <main className="flex w-full">
-          <InputSection
-            tabs={tabs}
-            templates={templates}
-            currentTab={activeTab}
-          />
+          <InputSection tabs={tabs} />
           <ScrollSection />
           <JsonPreviewSection />
         </main>

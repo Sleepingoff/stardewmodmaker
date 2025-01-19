@@ -10,7 +10,6 @@ import { useTabStore } from "../store/tabStore";
 
 const ContentTab = () => {
   const { pathname } = useLocation();
-  const currentFolder = pathname.split("/")[1];
 
   const { activeTab } = useTabStore();
 
@@ -32,9 +31,8 @@ const ContentTab = () => {
         ).then((res) => {
           return res.json();
         });
+        //매번 다시 원래 탭으로 돌아올 때마다 id가 달라짐
         const guide = addUniqueId(promises);
-        console.log(guide);
-
         setInputs(guide.locales["ko-KR"]);
       } catch (err) {
         console.log(err);
@@ -42,14 +40,14 @@ const ContentTab = () => {
     };
 
     loadAllJson();
-  }, [pathname]);
+  }, []);
 
   useEffect(() => {
     if (!setter) return;
 
     setter((prev) => ({
       ...prev,
-      1: inputs,
+      [activeTab]: inputs,
     }));
   }, [inputs, setter]);
 
